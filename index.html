@@ -240,7 +240,8 @@
 <script>
 /* ============ CONFIGURACIÓN ============ */
 const VERSION = 'v1.0';
-const LICENCIA = {clave:'XXH2-F856-JM4R', compra:'https://buymeacoffee.com/pentech', pruebas:3};
+// activa:false → modo testing: sin pantalla de clave y sin gastar partidas de prueba. Poner true para volver a pedir la clave.
+const LICENCIA = {activa:false, clave:'XXH2-F856-JM4R', compra:'https://buymeacoffee.com/pentech', pruebas:3};
 const K = {estado:'wingspan-contador-v1', lic:'wingspan-licencia-v1', pruebas:'wingspan-pruebas', hist:'wingspan-historial-v1', idioma:'wingspan-idioma', tema:'wingspan-tema'};
 const IDIOMAS = {es:'Español', ca:'Català', en:'English', fr:'Français', de:'Deutsch', it:'Italiano'};
 
@@ -523,7 +524,7 @@ function cargar(){ try{ const e=JSON.parse(lsGet(K.estado)); if(e&&e.jug&&e.cfg)
 let E = cargar() || nuevoEstado();
 function guardar(){ lsSet(K.estado, JSON.stringify(E)); }
 function nombre(i){ return (E.jug[i].nombre||'').trim() || (t('jugador')+' '+(i+1)); }
-const licOK = ()=>lsGet(K.lic)==='true';
+const licOK = ()=>!LICENCIA.activa || lsGet(K.lic)==='true';
 const pruebasUsadas = ()=>parseInt(lsGet(K.pruebas)||'0',10)||0;
 const pruebasQuedan = ()=>Math.max(0,LICENCIA.pruebas-pruebasUsadas());
 
