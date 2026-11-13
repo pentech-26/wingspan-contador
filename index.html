@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f3efe4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wingspan">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<title>Wingspan · Contador</title>
+<style>
+  @font-face{font-family:Antonio;font-weight:200;src:url(fonts/antonio-latin-200-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Antonio;font-weight:300;src:url(fonts/antonio-latin-300-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Antonio;font-weight:500;src:url(fonts/antonio-latin-500-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Jost;font-weight:400;src:url(fonts/jost-latin-400-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Jost;font-weight:500;src:url(fonts/jost-latin-500-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Jost;font-weight:600;src:url(fonts/jost-latin-600-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Dancing;font-weight:600;src:url(fonts/dancing-script-latin-600-normal.woff2) format('woff2');font-display:swap}
+
+  :root{
+    --fondo:#f3efe4;--tinta:#34433d;--gris:#7b8a83;--tarjeta:rgba(255,253,246,.84);--linea:rgba(70,95,85,.14);--campo:rgba(255,255,255,.7);--borde:rgba(70,95,85,.22);
+    --bosque:#2f6b55;--pradera:#d6a531;--humedal:#3f78b5;--marron:#b0642e;--salmon:#de8667;--rosa:#cf7697;--morado:#7d61ad;--rojo:#b9503d;
+    --verde:var(--bosque);--dorado:var(--marron);--resalte:rgba(230,195,120,.28);
+    --w1:rgba(132,190,222,.42);--w2:rgba(150,205,185,.38);--w3:rgba(238,214,170,.35);--w4:rgba(205,170,215,.22);
+    --lav:rgba(120,176,220,.5);--acento:var(--humedal);--huevo:#dfeaf3;--huevo2:#a9c4dc;
+    --sombra:0 6px 22px rgba(60,80,70,.10),0 1px 3px rgba(60,80,70,.08);
+  }
+  html[data-tema=noche]{
+    --fondo:#151f28;--tinta:#ebe5d6;--gris:#9eaab0;--tarjeta:rgba(29,41,52,.86);--linea:rgba(220,230,240,.10);--campo:rgba(10,18,26,.45);--borde:rgba(220,230,240,.16);
+    --bosque:#7cc3a3;--pradera:#e6bd5a;--humedal:#82b2e3;--marron:#c97a40;--salmon:#e79a7e;--rosa:#e092b0;--morado:#a58bd3;--rojo:#e3806b;
+    --resalte:rgba(201,122,64,.22);
+    --w1:rgba(60,105,150,.38);--w2:rgba(40,110,95,.30);--w3:rgba(120,90,60,.22);--w4:rgba(100,75,140,.25);
+    --lav:rgba(70,120,170,.55);--huevo:#4a5f72;--huevo2:#2e3f50;
+    --sombra:0 6px 22px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
+  }
+  [data-c=bosque]{--lav:rgba(110,180,145,.5);--acento:var(--bosque);--huevo:#e1efe6;--huevo2:#a7cbb5}
+  [data-c=pradera]{--lav:rgba(235,195,95,.5);--acento:var(--marron);--huevo:#f6eccf;--huevo2:#e0c47c}
+  [data-c=humedal]{--lav:rgba(120,176,220,.5);--acento:var(--humedal);--huevo:#dfeaf3;--huevo2:#a9c4dc}
+  [data-c=rosa]{--lav:rgba(225,140,175,.42);--acento:var(--rosa);--huevo:#f6e3ea;--huevo2:#ddabbd}
+  [data-c=salmon]{--lav:rgba(235,150,120,.45);--acento:var(--salmon);--huevo:#f7e5dc;--huevo2:#e2b29d}
+  [data-c=morado]{--lav:rgba(170,140,210,.45);--acento:var(--morado);--huevo:#ebe4f4;--huevo2:#bfaedb}
+  html[data-tema=noche] [data-c]{--huevo:#46596b;--huevo2:#2b3a49}
+  html[data-tema=noche] [data-c=bosque]{--lav:rgba(60,140,105,.5)}
+  html[data-tema=noche] [data-c=pradera]{--lav:rgba(180,135,50,.5)}
+  html[data-tema=noche] [data-c=humedal]{--lav:rgba(60,110,165,.55)}
+  html[data-tema=noche] [data-c=rosa]{--lav:rgba(170,80,120,.5)}
+  html[data-tema=noche] [data-c=salmon]{--lav:rgba(175,95,70,.5)}
+  html[data-tema=noche] [data-c=morado]{--lav:rgba(115,85,165,.5)}
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--fondo);color:var(--tinta);font-family:Jost,system-ui,-apple-system,"Segoe UI",sans-serif;touch-action:manipulation;-webkit-text-size-adjust:100%}
+  body{-webkit-touch-callout:none;min-height:100vh}
+  /* acuarela de fondo + grano de papel */
+  body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .32 0 0 0 0 .25 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(60% 40% at 12% 8%,var(--w1),transparent 70%),
+      radial-gradient(55% 35% at 92% 30%,var(--w2),transparent 70%),
+      radial-gradient(70% 40% at 20% 70%,var(--w3),transparent 70%),
+      radial-gradient(50% 35% at 85% 92%,var(--w4),transparent 70%),
+      var(--fondo)}
+  button{font-family:inherit}
+
+  /* Entrada */
+  #entrada{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:space-between;cursor:pointer;color:#35505e;text-align:center;
+    background:url(splash.webp) center bottom/cover no-repeat,
+      radial-gradient(55% 35% at 25% 22%,rgba(255,255,255,.75),transparent 70%),
+      radial-gradient(60% 40% at 80% 35%,rgba(150,205,200,.55),transparent 70%),
+      radial-gradient(70% 45% at 30% 75%,rgba(110,160,215,.6),transparent 70%),
+      radial-gradient(60% 40% at 85% 85%,rgba(80,130,200,.55),transparent 70%),
+      linear-gradient(180deg,#e8efe6 0%,#cfe3e2 40%,#9fc2dc 75%,#6f9ccc 100%);
+    padding:calc(56px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+  #entrada .tit{font-family:Antonio,sans-serif;font-weight:200;font-size:clamp(3.2rem,16vw,5rem);letter-spacing:.32em;margin:0 0 0 .32em;line-height:1;color:#fff;text-shadow:0 2px 18px rgba(40,70,100,.25)}
+  #entrada .sub{font-family:Dancing,cursive;font-size:1.9rem;color:#fff;margin-top:6px;text-shadow:0 1px 10px rgba(40,70,100,.35)}
+  #entrada .toca{font-family:Antonio,sans-serif;font-weight:500;letter-spacing:.12em;text-transform:uppercase;background:var(--marron);color:#fff;padding:13px 30px;border-radius:4px;box-shadow:0 4px 16px rgba(60,40,20,.3);font-size:1.05rem;animation:late 2.2s ease-in-out infinite;
+    background-image:linear-gradient(180deg,rgba(255,255,255,.12),rgba(0,0,0,.08))}
+  #entrada .firma{font-size:.82rem;color:#fff;opacity:.95;margin-top:12px;text-shadow:0 1px 4px rgba(30,50,80,.5)}
+  @keyframes late{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+  @media (prefers-reduced-motion:reduce){#entrada .toca{animation:none}}
+
+  /* Cabecera */
+  header{position:sticky;top:0;z-index:5;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;
+    background:radial-gradient(70% 120% at 15% 0%,var(--w1),transparent 70%),radial-gradient(60% 120% at 90% 10%,var(--w2),transparent 70%),color-mix(in srgb,var(--fondo) 88%,transparent);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--linea),0 6px 18px rgba(60,80,70,.07)}
+  .cabfila{display:flex;align-items:center;gap:8px}
+  .cabfila h1{margin:0;flex:1;text-align:center;white-space:nowrap;font-family:Antonio,sans-serif;font-weight:200;font-size:1.65rem;letter-spacing:.3em;padding-left:.3em;color:var(--tinta)}
+  .redondo{width:40px;height:40px;border:1px solid var(--linea);border-radius:50%;background:var(--tarjeta);color:var(--tinta);font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .conMenu{position:relative}
+  .menu{position:absolute;top:46px;background:var(--fondo);color:var(--tinta);border-radius:14px;box-shadow:var(--sombra);border:1px solid var(--linea);padding:6px;min-width:170px;z-index:30}
+  .menu.izq{left:0}.menu.der{right:0}
+  .menu button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;color:var(--tinta);padding:10px;border-radius:10px;font-size:.95rem;cursor:pointer;text-align:left}
+  .menu button.activo{background:var(--resalte);font-weight:600}
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin-top:10px;scrollbar-width:none;padding:2px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1px solid var(--linea);border-radius:999px;padding:6px 14px 6px 8px;background:var(--tarjeta);color:var(--tinta);font-size:.9rem;cursor:pointer;text-align:left;max-width:46vw;transition:transform .2s,box-shadow .2s}
+  .tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+  .tab small{display:block;font-size:.72rem;color:var(--gris)}
+  .tab.activo{box-shadow:0 0 0 2px var(--cubo),0 4px 12px rgba(0,0,0,.08);font-weight:600;transform:translateY(-1px)}
+  .cubo{width:20px;height:20px;border-radius:5px;flex:0 0 auto;background:var(--cubo);box-shadow:inset -3px -3px 0 rgba(0,0,0,.18),inset 2px 2px 0 rgba(255,255,255,.25)}
+
+  main{padding:12px 12px 130px;max-width:560px;margin:0 auto;animation:entra .3s ease}
+  @keyframes entra{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){main{animation:none}}
+  .panel{background:var(--tarjeta);border:1px solid var(--linea);border-radius:20px;padding:14px 16px;box-shadow:var(--sombra);margin-bottom:14px}
+  .panel h2{font-family:Antonio,sans-serif;font-weight:500;font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px;color:var(--tinta);display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .trazo{position:relative;display:inline-block;padding:3px 16px 2px 12px;margin-left:-8px;z-index:0}
+  .trazo::before{content:'';position:absolute;inset:-3px -4px;z-index:-1;background:var(--lav);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60' preserveAspectRatio='none'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.03 .25' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='16'/%3E%3CfeGaussianBlur stdDeviation='.7'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' d='M10 15 Q70 6 150 11 T290 13 L292 47 Q210 55 150 50 T8 47 Z'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60' preserveAspectRatio='none'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.03 .25' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='16'/%3E%3CfeGaussianBlur stdDeviation='.7'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' d='M10 15 Q70 6 150 11 T290 13 L292 47 Q210 55 150 50 T8 47 Z'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+  .panel h2 em{font-style:normal;font-family:Antonio,sans-serif;font-weight:500;font-size:1.45rem;color:var(--acento);display:flex;align-items:center;gap:3px;letter-spacing:0}
+  .panel h2 em::after{content:'';width:12px;height:22px;background:var(--acento);opacity:.55;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M2 1C10 5 12 14 6 23 7 15 7 8 2 1Z'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M2 1C10 5 12 14 6 23 7 15 7 8 2 1Z'/%3E%3C/svg%3E") center/contain no-repeat}
+  .fila{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--linea)}
+  .fila:last-child{border-bottom:0}
+  .fila label{font-size:1rem;flex:1}
+  .fila small{display:block;color:var(--gris);font-size:.76rem;margin-top:1px}
+  .ctrl{display:flex;align-items:center;gap:6px}
+  /* botones huevo */
+  .ctrl button{width:36px;height:44px;border:0;border-radius:50% 50% 50% 50%/58% 58% 42% 42%;cursor:pointer;color:var(--tinta);font-size:1.25rem;font-weight:600;line-height:1;padding-top:4px;
+    background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.95) 0,var(--huevo) 38%,var(--huevo2) 100%);
+    box-shadow:inset 0 -4px 7px rgba(0,0,0,.10),0 2px 4px rgba(60,80,70,.15);transition:transform .1s}
+  .ctrl button:active{transform:scale(.9) rotate(-4deg)}
+  input[type=number],select,input[type=text]{height:42px;border:1.5px solid var(--borde);border-radius:12px;background:var(--campo);color:var(--tinta);font-size:1rem;font-family:inherit}
+  input:focus,select:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px var(--lav)}
+  input[type=number]{width:58px;text-align:center;font-family:Antonio,sans-serif;font-weight:500;font-size:1.35rem;-moz-appearance:textfield}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=text]{width:100%;padding:0 12px}
+  select{padding:0 8px}
+  .pts{min-width:34px;text-align:right;font-family:Antonio,sans-serif;font-weight:500;font-size:1.2rem;color:var(--acento)}
+  .nota{font-size:.8rem;color:var(--gris);margin:4px 0 6px;line-height:1.35}
+  .bonus{border:1px solid var(--linea);border-radius:14px;padding:9px 12px;margin:8px 0;background:var(--campo);position:relative;overflow:hidden}
+  .bonus::before{content:'';position:absolute;left:0;top:0;right:0;height:5px;background:var(--lav)}
+  .bonus .tit{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600;font-size:.95rem}
+  .bonus .tit span:first-child{flex:1}
+  .bonus .tit button{border:0;background:none;color:var(--rojo);font-size:1.3rem;cursor:pointer;padding:0 4px}
+  .bonus .desc{font-size:.8rem;color:var(--gris);margin:2px 0 4px}
+  .anadir{display:flex;gap:6px;margin:10px 0 4px}
+  .anadir select{flex:1;min-width:0}
+  /* botones: banda marrón del tablero */
+  .boton{border:0;border-radius:6px;padding:11px 14px;background:var(--bosque);color:#fff;font-family:Antonio,sans-serif;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-size:1rem;
+    background-image:linear-gradient(180deg,rgba(255,255,255,.12),rgba(0,0,0,.08));box-shadow:0 2px 6px rgba(40,50,40,.15)}
+  html[data-tema=noche] .boton{color:#14201b}
+  .boton.oro{background-color:var(--marron);color:#fff}
+  .boton.claro{background:var(--campo);color:var(--tinta);border:1px solid var(--borde);box-shadow:none}
+  .boton.peligro{background:var(--campo);color:var(--rojo);border:1px solid var(--borde);box-shadow:none}
+  .boton:disabled{opacity:.55}
+  .barra{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .barra .boton{flex:1;min-width:140px}
+  .colis{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center;margin-top:6px}
+  .colis label{font-size:.72rem;color:var(--gris);display:flex;flex-direction:column;align-items:center;gap:3px;margin-bottom:4px;overflow:hidden}
+  .colis select{width:100%;font-family:Antonio,sans-serif;font-weight:500;font-size:1.05rem;padding:0 2px;text-align:center}
+  .grid3,.grid4{display:grid;gap:8px;text-align:center}
+  .grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+  .grid3 label,.grid4 label{font-size:.8rem;color:var(--gris);display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:4px}
+  .grid3 input,.grid4 input{width:100%}
+  .grid3 b,.grid4 b{display:block;margin-top:4px;color:var(--acento);font-family:Antonio,sans-serif;font-weight:500;font-size:1.05rem}
+  svg.ic{width:20px;height:20px;flex:0 0 auto}
+  /* Barra del total */
+  .total{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:540px;margin:0 auto;background:var(--fondo);border:1px solid var(--linea);border-radius:20px;color:var(--tinta);padding:8px 10px 8px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:6;box-shadow:0 8px 28px rgba(40,60,55,.18)}
+  .total>div{display:flex;align-items:center;gap:12px;min-width:0}
+  .total strong{font-family:Antonio,sans-serif;font-weight:500;font-size:2.1rem;line-height:1;color:var(--bosque);display:inline-block}
+  .total strong.late{animation:pulso .35s ease}
+  @keyframes pulso{50%{transform:scale(1.18)}}
+  .total .nom{font-family:Dancing,cursive;font-size:1.2rem;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .total .boton{padding:10px 14px}
+  .oculto{display:none!important}
+  .chk{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--linea);font-size:1rem}
+  .chk:last-child{border-bottom:0}
+  .chk input{width:22px;height:22px;accent-color:var(--bosque);flex:0 0 auto}
+  .chk small{display:block;color:var(--gris);font-size:.76rem}
+  .seg{display:flex;gap:6px;margin:6px 0}
+  .seg button{flex:1;border:1.5px solid var(--borde);background:var(--campo);border-radius:12px;padding:8px 2px;color:var(--tinta);cursor:pointer;font-family:Antonio,sans-serif;font-weight:500;font-size:1.05rem;letter-spacing:.04em}
+  .seg button small{font-family:Jost,sans-serif;font-weight:400;font-size:.72rem;display:block;letter-spacing:0;color:var(--gris)}
+  .seg button.activo{border-color:var(--acento);background:var(--lav);box-shadow:inset 0 0 0 1px var(--acento)}
+  .nombres input{margin:4px 0}
+  .velo{position:fixed;inset:0;background:rgba(30,45,55,.42);z-index:40;display:flex;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  .hoja{width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom));
+    background:radial-gradient(60% 30% at 15% 0%,var(--w1),transparent 70%),radial-gradient(50% 30% at 95% 10%,var(--w2),transparent 70%),var(--fondo)}
+  .hoja h2{margin:0 0 12px;font-family:Antonio,sans-serif;font-weight:300;font-size:1.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta)}
+  .hoja p{line-height:1.5}
+  table{width:100%;border-collapse:collapse;font-size:.88rem}
+  th,td{padding:6px 3px;text-align:center;border-bottom:1px dashed var(--linea)}
+  th{font-weight:600}
+  th:first-child,td:first-child{text-align:left;color:var(--gris)}
+  tr.gana td{background:var(--resalte);font-weight:600;color:var(--tinta)}
+  .podio{list-style:none;padding:0;margin:0 0 12px}
+  .podio li{display:flex;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:12px;margin-bottom:6px;background:var(--campo);border:1px solid var(--linea)}
+  .podio li span:last-child{font-family:Antonio,sans-serif;font-weight:500;font-size:1.15rem}
+  .podio li.primero{background:linear-gradient(90deg,rgba(235,195,95,.35),rgba(222,134,103,.22));font-weight:600;border-color:transparent}
+  .frase{font-family:Dancing,cursive;color:var(--bosque);font-size:1.25rem;text-align:center;margin:2px 0 10px}
+  .ficha{border:1px solid var(--linea);border-radius:14px;padding:10px 12px;margin-bottom:8px;background:var(--campo)}
+  .ficha .cab2{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:var(--gris)}
+  .ficha .gan{font-weight:600;margin:4px 0}
+  .ficha .acc{display:flex;gap:8px;margin-top:6px}
+  .ficha .acc button{flex:1;padding:7px}
+  .acceso{text-align:center}
+  .acceso h2{justify-content:center}
+  .acceso input{text-align:center;text-transform:uppercase;letter-spacing:2px;font-weight:600;margin:8px 0}
+  .acceso .boton{width:100%;margin-top:8px}
+  .msg{min-height:1.2em;font-size:.88rem;margin:6px 0 0}
+  .msg.mal{color:var(--rojo)}.msg.bien{color:var(--bosque)}
+  .pie{text-align:center;margin:18px 0 6px}
+  .pie button{border:0;background:none;color:var(--gris);font-size:.8rem;text-decoration:underline;cursor:pointer}
+  .aviso{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--tinta);color:var(--fondo);padding:10px 16px;border-radius:999px;font-size:.9rem;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+  #gira{position:fixed;inset:0;z-index:99;background:var(--fondo);color:var(--tinta);display:none;align-items:center;justify-content:center;font-family:Antonio,sans-serif;font-size:1.5rem;letter-spacing:.1em;text-align:center;padding:20px}
+  @media (orientation:landscape) and (max-height:500px){#gira{display:flex}}
+</style>
+</head>
+<body>
+
+<div id="entrada">
+  <div><p class="tit">WINGSPAN</p><div class="sub" id="entSub"></div></div>
+  <div><div class="toca" id="entToca"></div><div class="firma">by PenTech</div></div>
+</div>
+
+<header id="cab" class="oculto">
+  <div class="cabfila">
+    <div class="conMenu"><button class="redondo" id="btnIdioma" aria-label="Idioma">🌐</button><div class="menu izq oculto" id="menuIdioma"></div></div>
+    <h1>WINGSPAN</h1>
+    <div class="conMenu"><button class="redondo" id="btnTema" aria-label="Tema"></button><div class="menu der oculto" id="menuTema"></div></div>
+    <button class="redondo" id="btnAjustes" aria-label="Partida">⚙︎</button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</header>
+
+<main id="main"></main>
+
+<div class="total oculto" id="barraTotal">
+  <div><div class="nom" id="nombreActivo"></div><strong id="totalActivo">0</strong></div>
+  <button class="boton oro" id="btnFin"></button>
+</div>
+
+<div class="velo oculto" id="velo"><div class="hoja" id="hoja"></div></div>
+<div id="gira"></div>
+
+<script>
+/* ============ CONFIGURACIÓN ============ */
+const VERSION = 'v1.0';
+const LICENCIA = {clave:'XXH2-F856-JM4R', compra:'https://buymeacoffee.com/pentech', pruebas:3};
+const K = {estado:'wingspan-contador-v1', lic:'wingspan-licencia-v1', pruebas:'wingspan-pruebas', hist:'wingspan-historial-v1', idioma:'wingspan-idioma', tema:'wingspan-tema'};
+const IDIOMAS = {es:'Español', ca:'Català', en:'English', fr:'Français', de:'Deutsch', it:'Italiano'};
+
+/* ============ TEXTOS ============ */
+const T = {
+es:{contador:'Contador',toca:'Toca para empezar',jugadores:'Jugadores',jugador:'Jugador',expansiones:'Expansiones',
+ exp:{eur:'Europa',oce:'Oceanía',asia:'Asia',ame:'Américas'},
+ expD:{eur:'Cartas bonus de Europa',oce:'Néctar por hábitat y cartas bonus',asia:'Cartas bonus y modo duelo',ame:'Pista de colibríes y cartas bonus'},
+ duelo:'Modo duelo (Asia)',dueloD:'Añade los marcadores de duelo; las rondas se anotan a mano',
+ bandada:'Con 6 o 7 jugadores (modo bandada de Asia) los empates de ronda funcionan distinto: usa los objetivos en modo manual.',
+ objetivos:'Objetivos de ronda',verde:'Verde',verdeS:'por puestos',azul:'Azul',azulS:'1 por elemento',manual:'Manual',manualS:'pongo los puntos',
+ empezar:'Empezar partida',volverRec:'Volver al recuento',nueva:'Nueva partida',archivo:'Archivo de partidas',
+ avesRec:'Aves y recursos',aves:'Puntos en aves',avesS:'Impresos en las cartas de ave',huevos:'Huevos',huevosS:'1 punto cada uno',comida:'Comida en cartas',comidaS:'1 punto cada ficha almacenada',bajo:'Cartas bajo aves',bajoS:'1 punto cada carta',
+ ladoVerde:'Lado verde: anota cuántos elementos tiene cada uno. Los puestos y empates se calculan solos (hace falta al menos 1).',ladoAzul:'Lado azul: anota cuántos elementos tienes. 1 punto cada uno, máximo 5.',ladoMan:'Anota los puntos de cada ronda.',ladoDuelo:'Modo duelo: anota los puntos de cada ronda.',
+ ronda:'Ronda',pts:'pts',bonus:'Cartas de bonus',autoColi:'Se calcula con tu pista de colibríes.',activaAme:'Activa Américas para calcularla.',usaReserva:'Usa la comida sin usar que anotas en Desempate ({n}).',
+ pareja:'Columnas con pareja',trio:'Columnas con trío',cantidad:'Cantidad',porCada:'{p} por cada uno',anadirBonus:'Añadir carta de bonus…',otrosBonus:'Otros puntos de bonus',otrosBonusS:'Para cartas que no estén en la lista',quitar:'Quitar',
+ nectar:'Néctar consumido',nectarS:'Por hábitat: 5 puntos al que más tiene y 2 al segundo. Empates repartidos.',habs:['Bosque','Pradera','Humedal'],
+ coli:'Pista de colibríes',coliS:'Elige el valor en el que acabó cada ficha (en la salida valen −3).',coliN:['Abejas','Brillantes','Esmeraldas','Mangos','Topacios'],
+ dueloT:'Duelo',dueloM:'Marcadores en el grupo mayor',dueloMS:'1 punto por marcador de tu grupo conectado más grande',
+ desempate:'Desempate',reserva:'Comida sin usar en tu reserva',reservaS:'Si hay empate, gana quien tenga más',
+ verRes:'Ver resultado',resultado:'Resultado',empate:'Empate a puntos: decide la comida sin usar.',empateComp:' Siguen empatados, así que comparten la victoria.',
+ filas:{aves:'Aves',bonus:'Bonus',rondas:'Rondas',huevos:'Huevos',comida:'Comida',bajo:'Bajo aves',nectar:'Néctar',colibri:'Colibríes',duelo:'Duelo',total:'Total',reserva:'Reserva'},
+ volver:'Volver',terminar:'Terminar y guardar',guardada:'Guardada ✓',guardadaMsg:'Partida guardada en el archivo',
+ confNueva:'¿Empezar una partida nueva? Se borrarán los puntos (se conservan jugadores y expansiones).',
+ archVacio:'Todavía no hay partidas guardadas.',ver:'Ver',ocultar:'Ocultar',borrar:'Borrar',vaciar:'Vaciar archivo',otraVez:'Toca otra vez para confirmar',cerrar:'Cerrar',ganador:'Ganador',ganadores:'Ganadores',base:'Juego base',
+ acceso:'Activa tu contador',clave:'Clave de licencia',activar:'Activar',comprar:'Comprar la clave',probar:'Probar gratis',quedan:'Te quedan {n} partidas de prueba',quedan1:'Te queda 1 partida de prueba',agotada:'Has usado las {n} partidas de prueba.',claveMal:'Clave incorrecta',activada:'¡Clave activada!',clavePie:'La clave te llega en el email de confirmación de compra.',
+ tema:'Tema',auto:'Automático',dia:'Modo día',noche:'Modo noche',idioma:'Idioma',
+ aviso:'Aviso legal',gira:'Gira el móvil 📱',
+ legal:'Contador de puntos no oficial, creado de forma independiente por PenTech. No está afiliado, patrocinado ni aprobado por Stonemaier Games ni por Maldito Games. Wingspan es un juego de Elizabeth Hargrave publicado por Stonemaier Games y editado en España por Maldito Games; los nombres y las marcas pertenecen a sus propietarios. Para jugar necesitas un ejemplar del juego. La clave de licencia da acceso a esta app, no al juego.',
+ frases:['¡Que no se escapen los pájaros!','Cada huevo cuenta.','Tranquilo, el halcón no puntúa… o sí.','Si el pájaro canta, suma.','Pío pío, que el marcador sube.','Más vale pájaro en mano que ciento volando.','Cuenta las plumas, no las prisas.']},
+ca:{contador:'Comptador',toca:'Toca per començar',jugadores:'Jugadors',jugador:'Jugador',expansiones:'Expansions',
+ exp:{eur:'Europa',oce:'Oceania',asia:'Àsia',ame:'Amèriques'},
+ expD:{eur:"Cartes bonus d'Europa",oce:'Nèctar per hàbitat i cartes bonus',asia:'Cartes bonus i mode duel',ame:'Pista de colibrís i cartes bonus'},
+ duelo:'Mode duel (Àsia)',dueloD:"Afegeix els marcadors de duel; les rondes s'apunten a mà",
+ bandada:"Amb 6 o 7 jugadors (mode bandada d'Àsia) els empats de ronda funcionen diferent: fes servir els objectius en mode manual.",
+ objetivos:'Objectius de ronda',verde:'Verd',verdeS:'per posicions',azul:'Blau',azulS:'1 per element',manual:'Manual',manualS:'poso els punts',
+ empezar:'Començar partida',volverRec:'Tornar al recompte',nueva:'Partida nova',archivo:'Arxiu de partides',
+ avesRec:'Ocells i recursos',aves:'Punts en ocells',avesS:"Impresos a les cartes d'ocell",huevos:'Ous',huevosS:'1 punt cadascun',comida:'Menjar a les cartes',comidaS:'1 punt per fitxa guardada',bajo:'Cartes sota ocells',bajoS:'1 punt per carta',
+ ladoVerde:"Costat verd: apunta quants elements té cadascú. Les posicions i els empats es calculen sols (cal tenir-ne almenys 1).",ladoAzul:'Costat blau: apunta quants elements tens. 1 punt cadascun, màxim 5.',ladoMan:'Apunta els punts de cada ronda.',ladoDuelo:'Mode duel: apunta els punts de cada ronda.',
+ ronda:'Ronda',pts:'pts',bonus:'Cartes de bonus',autoColi:'Es calcula amb la teva pista de colibrís.',activaAme:'Activa Amèriques per calcular-la.',usaReserva:'Fa servir el menjar sense fer servir que apuntes a Desempat ({n}).',
+ pareja:'Columnes amb parella',trio:'Columnes amb trio',cantidad:'Quantitat',porCada:'{p} per cadascun',anadirBonus:'Afegir carta de bonus…',otrosBonus:'Altres punts de bonus',otrosBonusS:'Per a cartes que no siguin a la llista',quitar:'Treure',
+ nectar:'Nèctar consumit',nectarS:"Per hàbitat: 5 punts al que més en té i 2 al segon. Empats repartits.",habs:['Bosc','Prada','Aiguamoll'],
+ coli:'Pista de colibrís',coliS:'Tria el valor on ha acabat cada fitxa (a la sortida valen −3).',coliN:['Abelles','Brillants','Maragdes','Mangos','Topazis'],
+ dueloT:'Duel',dueloM:'Marcadors al grup més gran',dueloMS:'1 punt per marcador del teu grup connectat més gran',
+ desempate:'Desempat',reserva:'Menjar sense fer servir a la reserva',reservaS:"Si hi ha empat, guanya qui en tingui més",
+ verRes:'Veure resultat',resultado:'Resultat',empate:'Empat a punts: decideix el menjar sense fer servir.',empateComp:' Continuen empatats, així que comparteixen la victòria.',
+ filas:{aves:'Ocells',bonus:'Bonus',rondas:'Rondes',huevos:'Ous',comida:'Menjar',bajo:'Sota ocells',nectar:'Nèctar',colibri:'Colibrís',duelo:'Duel',total:'Total',reserva:'Reserva'},
+ volver:'Tornar',terminar:'Acabar i desar',guardada:'Desada ✓',guardadaMsg:"Partida desada a l'arxiu",
+ confNueva:"Començar una partida nova? S'esborraran els punts (es mantenen jugadors i expansions).",
+ archVacio:'Encara no hi ha partides desades.',ver:'Veure',ocultar:'Amagar',borrar:'Esborrar',vaciar:"Buidar l'arxiu",otraVez:'Toca un altre cop per confirmar',cerrar:'Tancar',ganador:'Guanyador',ganadores:'Guanyadors',base:'Joc base',
+ acceso:'Activa el teu comptador',clave:'Clau de llicència',activar:'Activar',comprar:'Comprar la clau',probar:'Provar gratis',quedan:'Et queden {n} partides de prova',quedan1:"Et queda 1 partida de prova",agotada:'Has fet servir les {n} partides de prova.',claveMal:'Clau incorrecta',activada:'Clau activada!',clavePie:"La clau t'arriba al correu de confirmació de compra.",
+ tema:'Tema',auto:'Automàtic',dia:'Mode dia',noche:'Mode nit',idioma:'Idioma',
+ aviso:'Avís legal',gira:'Gira el mòbil 📱',
+ legal:"Comptador de punts no oficial, creat de manera independent per PenTech. No està afiliat, patrocinat ni aprovat per Stonemaier Games ni per Maldito Games. Wingspan és un joc d'Elizabeth Hargrave publicat per Stonemaier Games i editat a Espanya per Maldito Games; els noms i les marques pertanyen als seus propietaris. Per jugar necessites un exemplar del joc. La clau de llicència dona accés a aquesta app, no al joc.",
+ frases:["Que no s'escapin els ocells!",'Cada ou compta.','Tranquil, el falcó no puntua… o sí.',"Si l'ocell canta, suma.",'Piu piu, que el marcador puja.','Més val ocell a la mà que cent volant.','Compta plomes, no presses.']},
+en:{contador:'Counter',toca:'Tap to start',jugadores:'Players',jugador:'Player',expansiones:'Expansions',
+ exp:{eur:'Europe',oce:'Oceania',asia:'Asia',ame:'Americas'},
+ expD:{eur:'European bonus cards',oce:'Nectar by habitat and bonus cards',asia:'Bonus cards and Duet mode',ame:'Hummingbird track and bonus cards'},
+ duelo:'Duet mode (Asia)',dueloD:'Adds duet tokens; rounds are entered by hand',
+ bandada:'With 6 or 7 players (Asia Flock mode) round ties work differently: use manual goals.',
+ objetivos:'End-of-round goals',verde:'Green',verdeS:'by ranking',azul:'Blue',azulS:'1 per item',manual:'Manual',manualS:'I enter points',
+ empezar:'Start game',volverRec:'Back to scoring',nueva:'New game',archivo:'Game archive',
+ avesRec:'Birds and resources',aves:'Bird points',avesS:'Printed on the bird cards',huevos:'Eggs',huevosS:'1 point each',comida:'Food on cards',comidaS:'1 point per cached token',bajo:'Tucked cards',bajoS:'1 point per card',
+ ladoVerde:'Green side: enter how many items each player has. Rankings and ties are worked out for you (you need at least 1).',ladoAzul:'Blue side: enter how many items you have. 1 point each, maximum 5.',ladoMan:'Enter the points for each round.',ladoDuelo:'Duet mode: enter the points for each round.',
+ ronda:'Round',pts:'pts',bonus:'Bonus cards',autoColi:'Worked out from your hummingbird track.',activaAme:'Turn on Americas to score it.',usaReserva:'Uses the unused food you enter under Tiebreaker ({n}).',
+ pareja:'Columns with a pair',trio:'Columns with a trio',cantidad:'Amount',porCada:'{p} each',anadirBonus:'Add a bonus card…',otrosBonus:'Other bonus points',otrosBonusS:'For cards not in the list',quitar:'Remove',
+ nectar:'Spent nectar',nectarS:'Per habitat: 5 points for the most and 2 for second. Ties are shared.',habs:['Forest','Grassland','Wetland'],
+ coli:'Hummingbird track',coliS:'Pick the value where each token ended (they start at −3).',coliN:['Bees','Brilliants','Emeralds','Mangoes','Topazes'],
+ dueloT:'Duet',dueloM:'Tokens in largest group',dueloMS:'1 point per token in your largest connected group',
+ desempate:'Tiebreaker',reserva:'Unused food in your supply',reservaS:'In a tie, whoever has more wins',
+ verRes:'See result',resultado:'Result',empate:'Tied on points: unused food decides.',empateComp:' Still tied, so they share the victory.',
+ filas:{aves:'Birds',bonus:'Bonus',rondas:'Rounds',huevos:'Eggs',comida:'Food',bajo:'Tucked',nectar:'Nectar',colibri:'Hummingbirds',duelo:'Duet',total:'Total',reserva:'Supply'},
+ volver:'Back',terminar:'Finish and save',guardada:'Saved ✓',guardadaMsg:'Game saved to the archive',
+ confNueva:'Start a new game? Points will be cleared (players and expansions are kept).',
+ archVacio:'No saved games yet.',ver:'Show',ocultar:'Hide',borrar:'Delete',vaciar:'Clear archive',otraVez:'Tap again to confirm',cerrar:'Close',ganador:'Winner',ganadores:'Winners',base:'Base game',
+ acceso:'Unlock your counter',clave:'Licence key',activar:'Activate',comprar:'Buy the key',probar:'Try for free',quedan:'{n} trial games left',quedan1:'1 trial game left',agotada:'You have used your {n} trial games.',claveMal:'Wrong key',activada:'Key activated!',clavePie:'The key arrives in your purchase confirmation email.',
+ tema:'Theme',auto:'Automatic',dia:'Day mode',noche:'Night mode',idioma:'Language',
+ aviso:'Legal notice',gira:'Turn your phone 📱',
+ legal:'Unofficial score counter, created independently by PenTech. It is not affiliated with, sponsored or endorsed by Stonemaier Games. Wingspan is a game by Elizabeth Hargrave published by Stonemaier Games; names and trademarks belong to their owners. You need a copy of the game to play. The licence key gives access to this app, not to the game.',
+ frases:["Don't let the birds fly away!",'Every egg counts.','Relax, the hawk doesn\'t score… or does it?','If the bird sings, it scores.','Tweet tweet, the score goes up.','A bird in the hand is worth two in the bush.','Count feathers, not hurries.']},
+fr:{contador:'Compteur',toca:'Touchez pour commencer',jugadores:'Joueurs',jugador:'Joueur',expansiones:'Extensions',
+ exp:{eur:'Europe',oce:'Océanie',asia:'Asie',ame:'Amériques'},
+ expD:{eur:"Cartes Bonus d'Europe",oce:'Nectar par habitat et cartes Bonus',asia:'Cartes Bonus et mode duel',ame:'Piste des colibris et cartes Bonus'},
+ duelo:'Mode duel (Asie)',dueloD:'Ajoute les marqueurs de duel ; les manches se notent à la main',
+ bandada:'À 6 ou 7 joueurs (mode nuée d’Asie), les égalités de manche fonctionnent autrement : utilisez les objectifs en mode manuel.',
+ objetivos:'Objectifs de fin de manche',verde:'Vert',verdeS:'par classement',azul:'Bleu',azulS:'1 par élément',manual:'Manuel',manualS:'je note les points',
+ empezar:'Commencer la partie',volverRec:'Retour au décompte',nueva:'Nouvelle partie',archivo:'Archives des parties',
+ avesRec:'Oiseaux et ressources',aves:'Points des oiseaux',avesS:'Imprimés sur les cartes Oiseau',huevos:'Œufs',huevosS:'1 point chacun',comida:'Nourriture sur les cartes',comidaS:'1 point par jeton stocké',bajo:'Cartes glissées',bajoS:'1 point par carte',
+ ladoVerde:'Face verte : notez combien d’éléments a chacun. Classement et égalités sont calculés automatiquement (il en faut au moins 1).',ladoAzul:'Face bleue : notez combien d’éléments vous avez. 1 point chacun, 5 maximum.',ladoMan:'Notez les points de chaque manche.',ladoDuelo:'Mode duel : notez les points de chaque manche.',
+ ronda:'Manche',pts:'pts',bonus:'Cartes Bonus',autoColi:'Calculée avec votre piste des colibris.',activaAme:'Activez Amériques pour la calculer.',usaReserva:'Utilise la nourriture inutilisée notée dans Départage ({n}).',
+ pareja:'Colonnes avec une paire',trio:'Colonnes avec un trio',cantidad:'Quantité',porCada:'{p} chacun',anadirBonus:'Ajouter une carte Bonus…',otrosBonus:'Autres points de bonus',otrosBonusS:'Pour les cartes absentes de la liste',quitar:'Retirer',
+ nectar:'Nectar consommé',nectarS:'Par habitat : 5 points au premier et 2 au deuxième. Égalités partagées.',habs:['Forêt','Prairie','Zone humide'],
+ coli:'Piste des colibris',coliS:'Choisissez la valeur atteinte par chaque jeton (au départ ils valent −3).',coliN:['Abeilles','Brillants','Émeraudes','Mangues','Topazes'],
+ dueloT:'Duel',dueloM:'Marqueurs du plus grand groupe',dueloMS:'1 point par marqueur de votre plus grand groupe connecté',
+ desempate:'Départage',reserva:'Nourriture inutilisée dans votre réserve',reservaS:'En cas d’égalité, celui qui en a le plus gagne',
+ verRes:'Voir le résultat',resultado:'Résultat',empate:'Égalité de points : la nourriture inutilisée départage.',empateComp:' Toujours à égalité : ils partagent la victoire.',
+ filas:{aves:'Oiseaux',bonus:'Bonus',rondas:'Manches',huevos:'Œufs',comida:'Nourriture',bajo:'Glissées',nectar:'Nectar',colibri:'Colibris',duelo:'Duel',total:'Total',reserva:'Réserve'},
+ volver:'Retour',terminar:'Terminer et enregistrer',guardada:'Enregistrée ✓',guardadaMsg:'Partie enregistrée dans les archives',
+ confNueva:'Commencer une nouvelle partie ? Les points seront effacés (joueurs et extensions conservés).',
+ archVacio:'Aucune partie enregistrée pour l’instant.',ver:'Voir',ocultar:'Masquer',borrar:'Supprimer',vaciar:'Vider les archives',otraVez:'Touchez encore pour confirmer',cerrar:'Fermer',ganador:'Gagnant',ganadores:'Gagnants',base:'Jeu de base',
+ acceso:'Activez votre compteur',clave:'Clé de licence',activar:'Activer',comprar:'Acheter la clé',probar:'Essayer gratuitement',quedan:'Il vous reste {n} parties d’essai',quedan1:'Il vous reste 1 partie d’essai',agotada:'Vous avez utilisé vos {n} parties d’essai.',claveMal:'Clé incorrecte',activada:'Clé activée !',clavePie:'La clé arrive dans l’e-mail de confirmation d’achat.',
+ tema:'Thème',auto:'Automatique',dia:'Mode jour',noche:'Mode nuit',idioma:'Langue',
+ aviso:'Mentions légales',gira:'Tournez votre téléphone 📱',
+ legal:'Compteur de points non officiel, créé de manière indépendante par PenTech. Il n’est ni affilié, ni sponsorisé, ni approuvé par Stonemaier Games. Wingspan est un jeu d’Elizabeth Hargrave publié par Stonemaier Games ; les noms et marques appartiennent à leurs propriétaires. Il faut un exemplaire du jeu pour jouer. La clé de licence donne accès à cette application, pas au jeu.',
+ frases:['Ne laissez pas filer les oiseaux !','Chaque œuf compte.','Du calme, le faucon ne marque pas… ou si.','Si l’oiseau chante, ça compte.','Cui-cui, le score grimpe.','Un tiens vaut mieux que deux tu l’auras.','Comptez les plumes, pas les minutes.']},
+de:{contador:'Zähler',toca:'Zum Starten tippen',jugadores:'Spieler',jugador:'Spieler',expansiones:'Erweiterungen',
+ exp:{eur:'Europa',oce:'Ozeanien',asia:'Asien',ame:'Amerika'},
+ expD:{eur:'Bonuskarten aus Europa',oce:'Nektar je Lebensraum und Bonuskarten',asia:'Bonuskarten und Duellmodus',ame:'Kolibri-Leiste und Bonuskarten'},
+ duelo:'Duellmodus (Asien)',dueloD:'Fügt Duellmarker hinzu; Runden werden von Hand eingetragen',
+ bandada:'Mit 6 oder 7 Spielern (Schwarmmodus aus Asien) gelten bei Gleichstand andere Regeln: nutze die Rundenziele manuell.',
+ objetivos:'Rundenziele',verde:'Grün',verdeS:'nach Platzierung',azul:'Blau',azulS:'1 pro Objekt',manual:'Manuell',manualS:'Punkte selbst eintragen',
+ empezar:'Spiel starten',volverRec:'Zurück zur Wertung',nueva:'Neues Spiel',archivo:'Spielarchiv',
+ avesRec:'Vögel und Ressourcen',aves:'Vogelpunkte',avesS:'Auf den Vogelkarten aufgedruckt',huevos:'Eier',huevosS:'1 Punkt pro Ei',comida:'Futter auf Karten',comidaS:'1 Punkt pro gelagertem Marker',bajo:'Karten unter Vögeln',bajoS:'1 Punkt pro Karte',
+ ladoVerde:'Grüne Seite: trage ein, wie viele Zielobjekte jeder hat. Platzierung und Gleichstände werden berechnet (mindestens 1 nötig).',ladoAzul:'Blaue Seite: trage ein, wie viele Zielobjekte du hast. 1 Punkt pro Objekt, maximal 5.',ladoMan:'Trage die Punkte jeder Runde ein.',ladoDuelo:'Duellmodus: trage die Punkte jeder Runde ein.',
+ ronda:'Runde',pts:'P.',bonus:'Bonuskarten',autoColi:'Wird aus deiner Kolibri-Leiste berechnet.',activaAme:'Aktiviere Amerika, um sie zu werten.',usaReserva:'Nutzt das ungenutzte Futter aus Gleichstand ({n}).',
+ pareja:'Spalten mit Paar',trio:'Spalten mit Trio',cantidad:'Anzahl',porCada:'{p} pro Stück',anadirBonus:'Bonuskarte hinzufügen…',otrosBonus:'Weitere Bonuspunkte',otrosBonusS:'Für Karten, die nicht in der Liste sind',quitar:'Entfernen',
+ nectar:'Verbrauchter Nektar',nectarS:'Je Lebensraum: 5 Punkte für die meisten, 2 für den zweiten Platz. Gleichstände werden geteilt.',habs:['Wald','Grasland','Wasser'],
+ coli:'Kolibri-Leiste',coliS:'Wähle den Wert, auf dem jeder Marker steht (am Start −3).',coliN:['Bienen','Brillanten','Smaragde','Mangos','Topase'],
+ dueloT:'Duell',dueloM:'Marker in der größten Gruppe',dueloMS:'1 Punkt pro Duellmarker in deiner größten zusammenhängenden Gruppe',
+ desempate:'Gleichstand',reserva:'Ungenutztes Futter im Vorrat',reservaS:'Bei Gleichstand gewinnt, wer mehr hat',
+ verRes:'Ergebnis',resultado:'Ergebnis',empate:'Punktgleichstand: ungenutztes Futter entscheidet.',empateComp:' Immer noch gleich: sie teilen sich den Sieg.',
+ filas:{aves:'Vögel',bonus:'Bonus',rondas:'Runden',huevos:'Eier',comida:'Futter',bajo:'Darunter',nectar:'Nektar',colibri:'Kolibris',duelo:'Duell',total:'Gesamt',reserva:'Vorrat'},
+ volver:'Zurück',terminar:'Beenden und speichern',guardada:'Gespeichert ✓',guardadaMsg:'Spiel im Archiv gespeichert',
+ confNueva:'Neues Spiel starten? Die Punkte werden gelöscht (Spieler und Erweiterungen bleiben).',
+ archVacio:'Noch keine gespeicherten Spiele.',ver:'Zeigen',ocultar:'Ausblenden',borrar:'Löschen',vaciar:'Archiv leeren',otraVez:'Zum Bestätigen erneut tippen',cerrar:'Schließen',ganador:'Sieger',ganadores:'Sieger',base:'Grundspiel',
+ acceso:'Zähler freischalten',clave:'Lizenzschlüssel',activar:'Aktivieren',comprar:'Schlüssel kaufen',probar:'Kostenlos testen',quedan:'Noch {n} Testspiele',quedan1:'Noch 1 Testspiel',agotada:'Du hast deine {n} Testspiele verbraucht.',claveMal:'Falscher Schlüssel',activada:'Schlüssel aktiviert!',clavePie:'Den Schlüssel bekommst du in der Kaufbestätigung per E-Mail.',
+ tema:'Design',auto:'Automatisch',dia:'Tagmodus',noche:'Nachtmodus',idioma:'Sprache',
+ aviso:'Rechtlicher Hinweis',gira:'Drehe dein Handy 📱',
+ legal:'Inoffizieller Punktezähler, unabhängig erstellt von PenTech. Nicht verbunden mit, gesponsert oder genehmigt von Stonemaier Games oder Feuerland Spiele. Wingspan (Flügelschlag) ist ein Spiel von Elizabeth Hargrave, veröffentlicht von Stonemaier Games; Namen und Marken gehören ihren Inhabern. Zum Spielen brauchst du ein Exemplar des Spiels. Der Lizenzschlüssel gibt Zugang zu dieser App, nicht zum Spiel.',
+ frases:['Lass die Vögel nicht entwischen!','Jedes Ei zählt.','Keine Sorge, der Falke punktet nicht… oder doch.','Wenn der Vogel singt, zählt es.','Piep piep, die Punkte steigen.','Lieber den Spatz in der Hand als die Taube auf dem Dach.','Federn zählen, nicht hetzen.']},
+it:{contador:'Contatore',toca:'Tocca per iniziare',jugadores:'Giocatori',jugador:'Giocatore',expansiones:'Espansioni',
+ exp:{eur:'Europa',oce:'Oceania',asia:'Asia',ame:'Americhe'},
+ expD:{eur:'Carte bonus europee',oce:'Nettare per habitat e carte bonus',asia:'Carte bonus e modalità duello',ame:'Tracciato dei colibrì e carte bonus'},
+ duelo:'Modalità duello (Asia)',dueloD:'Aggiunge i segnalini duello; i round si segnano a mano',
+ bandada:'Con 6 o 7 giocatori (modalità stormo di Asia) i pareggi dei round funzionano diversamente: usa gli obiettivi in modalità manuale.',
+ objetivos:'Obiettivi di fine round',verde:'Verde',verdeS:'per posizione',azul:'Blu',azulS:'1 per elemento',manual:'Manuale',manualS:'inserisco i punti',
+ empezar:'Inizia partita',volverRec:'Torna al conteggio',nueva:'Nuova partita',archivo:'Archivio partite',
+ avesRec:'Uccelli e risorse',aves:'Punti degli uccelli',avesS:'Stampati sulle carte uccello',huevos:'Uova',huevosS:'1 punto ciascuno',comida:'Cibo sulle carte',comidaS:'1 punto per gettone conservato',bajo:'Carte sotto gli uccelli',bajoS:'1 punto per carta',
+ ladoVerde:'Lato verde: segna quanti elementi ha ciascuno. Posizioni e pareggi si calcolano da soli (serve almeno 1).',ladoAzul:'Lato blu: segna quanti elementi hai. 1 punto ciascuno, massimo 5.',ladoMan:'Segna i punti di ogni round.',ladoDuelo:'Modalità duello: segna i punti di ogni round.',
+ ronda:'Round',pts:'pt',bonus:'Carte bonus',autoColi:'Calcolata dal tuo tracciato dei colibrì.',activaAme:'Attiva Americhe per calcolarla.',usaReserva:'Usa il cibo non usato che segni in Spareggio ({n}).',
+ pareja:'Colonne con coppia',trio:'Colonne con tris',cantidad:'Quantità',porCada:'{p} ciascuno',anadirBonus:'Aggiungi carta bonus…',otrosBonus:'Altri punti bonus',otrosBonusS:'Per carte non presenti nella lista',quitar:'Rimuovi',
+ nectar:'Nettare consumato',nectarS:'Per habitat: 5 punti al primo e 2 al secondo. Pareggi divisi.',habs:['Bosco','Prateria','Zona umida'],
+ coli:'Tracciato dei colibrì',coliS:'Scegli il valore raggiunto da ogni segnalino (alla partenza valgono −3).',coliN:['Api','Brillanti','Smeraldi','Mango','Topazi'],
+ dueloT:'Duello',dueloM:'Segnalini nel gruppo più grande',dueloMS:'1 punto per segnalino nel tuo gruppo collegato più grande',
+ desempate:'Spareggio',reserva:'Cibo non usato nella tua riserva',reservaS:'In caso di pareggio vince chi ne ha di più',
+ verRes:'Vedi risultato',resultado:'Risultato',empate:'Pareggio a punti: decide il cibo non usato.',empateComp:' Ancora pari: condividono la vittoria.',
+ filas:{aves:'Uccelli',bonus:'Bonus',rondas:'Round',huevos:'Uova',comida:'Cibo',bajo:'Sotto',nectar:'Nettare',colibri:'Colibrì',duelo:'Duello',total:'Totale',reserva:'Riserva'},
+ volver:'Indietro',terminar:'Termina e salva',guardada:'Salvata ✓',guardadaMsg:'Partita salvata in archivio',
+ confNueva:'Iniziare una nuova partita? I punti verranno cancellati (giocatori ed espansioni restano).',
+ archVacio:'Ancora nessuna partita salvata.',ver:'Mostra',ocultar:'Nascondi',borrar:'Elimina',vaciar:'Svuota archivio',otraVez:'Tocca di nuovo per confermare',cerrar:'Chiudi',ganador:'Vincitore',ganadores:'Vincitori',base:'Gioco base',
+ acceso:'Attiva il tuo contatore',clave:'Chiave di licenza',activar:'Attiva',comprar:'Acquista la chiave',probar:'Prova gratis',quedan:'Ti restano {n} partite di prova',quedan1:'Ti resta 1 partita di prova',agotada:'Hai usato le tue {n} partite di prova.',claveMal:'Chiave errata',activada:'Chiave attivata!',clavePie:'La chiave arriva nell’e-mail di conferma dell’acquisto.',
+ tema:'Tema',auto:'Automatico',dia:'Modalità giorno',noche:'Modalità notte',idioma:'Lingua',
+ aviso:'Note legali',gira:'Ruota il telefono 📱',
+ legal:'Contapunti non ufficiale, creato in modo indipendente da PenTech. Non è affiliato, sponsorizzato né approvato da Stonemaier Games. Wingspan è un gioco di Elizabeth Hargrave pubblicato da Stonemaier Games; nomi e marchi appartengono ai rispettivi proprietari. Per giocare serve una copia del gioco. La chiave di licenza dà accesso a questa app, non al gioco.',
+ frases:['Non far scappare gli uccelli!','Ogni uovo conta.','Tranquillo, il falco non fa punti… o forse sì.','Se l’uccello canta, conta.','Cip cip, il punteggio sale.','Meglio un uccello in mano che cento in volo.','Conta le piume, non la fretta.']}
+};
+const ORD = {es:n=>n+'.º',ca:n=>n+({1:'r',2:'n',3:'r',4:'t'}[n]||'è'),en:n=>n+({1:'st',2:'nd',3:'rd'}[n]||'th'),fr:n=>n+(n===1?'er':'e'),de:n=>n+'.',it:n=>n+'º'};
+
+/* ============ CARTAS BONUS ============ */
+// [id, expansión, tipo, parámetros, nombre ES (también CA), nombre EN (FR/DE/IT), {descripciones}]
+function L(es,ca,en,fr,de,it){return {es,ca,en,fr,de,it};}
+const HAB_IC=['🌳','🌾','💧'];
+const B = [];
+function b(id,e,t,p,nes,nen,q){ B.push(Object.assign({id,e,t,nes,nen,q},p)); }
+// --- Juego base ---
+b('aficionado','base','tramos',{tr:[[5,3],[7,6]]},'Aficionado de jardín','Backyard Birder',L('Aves que valen 4 puntos o más','Ocells que valen 4 punts o més','Birds worth 4 points or more','Oiseaux valant 4 points ou plus','Vögel mit 4 oder mehr Punkten','Uccelli che valgono 4 punti o più'));
+b('anatomista','base','tramos',{tr:[[2,3],[4,7]]},'Anatomista','Anatomist',L('Aves con partes del cuerpo en el nombre','Ocells amb parts del cos al nom','Birds with body parts in their names','Oiseaux avec une partie du corps dans le nom','Vögel mit Körperteilen im Namen','Uccelli con parti del corpo nel nome'));
+b('semillas','base','tramos',{tr:[[5,3],[8,7]]},'Aves que comen semillas','Bird Feeder',L('Aves con 🌾 en su coste','Ocells amb 🌾 al cost','Birds with 🌾 in their cost','Oiseaux avec 🌾 dans leur coût','Vögel mit 🌾 in den Kosten','Uccelli con 🌾 nel costo'));
+b('cartografo','base','tramos',{tr:[[2,3],[4,7]]},'Cartógrafo','Cartographer',L('Aves con geografía en el nombre','Ocells amb geografia al nom','Birds with geography in their names','Oiseaux avec un nom géographique','Vögel mit Geografie im Namen','Uccelli con geografia nel nome'));
+b('cajasnido','base','tramos',{tr:[[4,4],[6,7]]},'Constructor de cajas nido','Nest Box Builder',L('Aves con nido de cavidad (o ⭐)','Ocells amb niu de cavitat (o ⭐)','Birds with cavity nests (or ⭐)','Oiseaux avec nid cavité (ou ⭐)','Vögel mit Bruthöhlen-Nest (oder ⭐)','Uccelli con nido in cavità (o ⭐)'));
+b('cercados','base','tramos',{tr:[[4,4],[6,7]]},'Constructor de cercados','Enclosure Builder',L('Aves con nido de suelo (o ⭐)','Ocells amb niu de terra (o ⭐)','Birds with ground nests (or ⭐)','Oiseaux avec nid au sol (ou ⭐)','Vögel mit Boden-Nest (oder ⭐)','Uccelli con nido a terra (o ⭐)'));
+b('plataformas','base','tramos',{tr:[[4,4],[6,7]]},'Constructor de plataformas','Platform Builder',L('Aves con nido de plataforma (o ⭐)','Ocells amb niu de plataforma (o ⭐)','Birds with platform nests (or ⭐)','Oiseaux avec nid plateforme (ou ⭐)','Vögel mit Plattform-Nest (oder ⭐)','Uccelli con nido a piattaforma (o ⭐)'));
+b('jardinero','base','tramos',{tr:[[4,4],[6,7]]},'Jardinero silvestre','Wildlife Gardener',L('Aves con nido de cuenco (o ⭐)','Ocells amb niu de bol (o ⭐)','Birds with bowl nests (or ⭐)','Oiseaux avec nid en coupe (ou ⭐)','Vögel mit Schalen-Nest (oder ⭐)','Uccelli con nido a coppa (o ⭐)'));
+b('contador','base','por',{p:2},'Contador de aves','Bird Counter',L('Aves con poder de bandada','Ocells amb poder de bandada','Birds with a flocking power','Oiseaux avec un pouvoir de nuée','Vögel mit Schwarm-Fähigkeit','Uccelli con potere di stormo'));
+b('criador','base','por',{p:1},'Criador de aves','Breeding Manager',L('Aves con 4 huevos o más','Ocells amb 4 ous o més','Birds with 4 or more eggs','Oiseaux avec 4 œufs ou plus','Vögel mit 4 oder mehr Eiern','Uccelli con 4 uova o più'));
+b('ecologista','base','por',{p:2},'Ecologista','Ecologist',L('Aves de tu hábitat con menos aves','Ocells del teu hàbitat amb menys ocells','Birds in your habitat with the fewest birds','Oiseaux de votre habitat le moins peuplé','Vögel in deinem Lebensraum mit den wenigsten Vögeln','Uccelli nel tuo habitat con meno uccelli'));
+b('grandes','base','tramos',{tr:[[4,3],[6,6]]},'Especialista en grandes aves','Large Bird Specialist',L('Aves de más de 65 cm de envergadura','Ocells de més de 65 cm d’envergadura','Birds with wingspan over 65 cm','Oiseaux de plus de 65 cm d’envergure','Vögel mit über 65 cm Spannweite','Uccelli con apertura alare oltre 65 cm'));
+b('paseri','base','tramos',{tr:[[4,3],[6,6]]},'Especialista en paseriformes','Passerine Specialist',L('Aves de 30 cm o menos de envergadura','Ocells de 30 cm o menys d’envergadura','Birds with wingspan of 30 cm or less','Oiseaux de 30 cm d’envergure ou moins','Vögel mit 30 cm Spannweite oder weniger','Uccelli con apertura alare di 30 cm o meno'));
+b('humedales','base','tramos',{tr:[[3,3],[5,7]]},'Experto en humedales','Wetland Expert',L('Aves que solo viven en humedal','Ocells que només viuen a l’aiguamoll','Birds that can only live in wetland','Oiseaux qui ne vivent qu’en zone humide','Vögel, die nur am Wasser leben','Uccelli che vivono solo in zona umida'));
+b('omnivoros','base','por',{p:2},'Experto en omnívoros','Omnivore Expert',L('Aves con comodín en su coste','Ocells amb comodí al cost','Birds with wild food in their cost','Oiseaux avec nourriture joker dans leur coût','Vögel mit Beliebig-Futter in den Kosten','Uccelli con cibo jolly nel costo'));
+b('redtrofica','base','por',{p:2},'Experto en red trófica','Food Web Expert',L('Aves que solo comen invertebrados','Ocells que només mengen invertebrats','Birds that only eat invertebrates','Oiseaux qui ne mangent que des invertébrés','Vögel, die nur Wirbellose fressen','Uccelli che mangiano solo invertebrati'));
+b('fotografo','base','tramos',{tr:[[4,3],[6,6]]},'Fotógrafo','Photographer',L('Aves con colores en el nombre','Ocells amb colors al nom','Birds with colors in their names','Oiseaux avec une couleur dans le nom','Vögel mit Farben im Namen','Uccelli con colori nel nome'));
+b('halconero','base','por',{p:2},'Halconero','Falconer',L('Aves depredadoras','Ocells depredadors','Predator birds','Oiseaux prédateurs','Greifvögel','Uccelli predatori'));
+b('historiador','base','por',{p:2},'Historiador','Historian',L('Aves con nombre de persona','Ocells amb nom de persona','Birds named after a person','Oiseaux portant un nom de personne','Vögel, die nach einer Person benannt sind','Uccelli con nome di persona'));
+b('lider','base','tramos',{tr:[[5,4],[8,7]]},'Líder visionario','Visionary Leader',L('Cartas de ave en la mano al final','Cartes d’ocell a la mà al final','Bird cards in hand at game end','Cartes Oiseau en main en fin de partie','Vogelkarten auf der Hand am Spielende','Carte uccello in mano a fine partita'));
+b('oologo','base','tramos',{tr:[[7,3],[9,6]]},'Oólogo','Oologist',L('Aves con al menos 1 huevo','Ocells amb almenys 1 ou','Birds with at least 1 egg','Oiseaux avec au moins 1 œuf','Vögel mit mindestens 1 Ei','Uccelli con almeno 1 uovo'));
+b('pascicultor','base','tramos',{tr:[[2,3],[4,8]]},'Pascicultor','Prairie Manager',L('Aves que solo viven en pradera','Ocells que només viuen a la prada','Birds that can only live in grassland','Oiseaux qui ne vivent qu’en prairie','Vögel, die nur im Grasland leben','Uccelli che vivono solo in prateria'));
+b('piscicultor','base','tramos',{tr:[[2,3],[4,8]]},'Piscicultor','Fishery Manager',L('Aves con 🐟 en su coste','Ocells amb 🐟 al cost','Birds with 🐟 in their cost','Oiseaux avec 🐟 dans leur coût','Vögel mit 🐟 in den Kosten','Uccelli con 🐟 nel costo'));
+b('rodentologo','base','por',{p:2},'Rodentólogo','Rodentologist',L('Aves con 🐭 en su coste','Ocells amb 🐭 al cost','Birds with 🐭 in their cost','Oiseaux avec 🐭 dans leur coût','Vögel mit 🐭 in den Kosten','Uccelli con 🐭 nel costo'));
+b('silvicultor','base','tramos',{tr:[[3,4],[5,8]]},'Silvicultor','Forester',L('Aves que solo viven en bosque','Ocells que només viuen al bosc','Birds that can only live in forest','Oiseaux qui ne vivent qu’en forêt','Vögel, die nur im Wald leben','Uccelli che vivono solo nel bosco'));
+b('viticultor','base','tramos',{tr:[[2,3],[4,7]]},'Viticultor','Viticulturalist',L('Aves con 🍒 en su coste','Ocells amb 🍒 al cost','Birds with 🍒 in their cost','Oiseaux avec 🍒 dans leur coût','Vögel mit 🍒 in den Kosten','Uccelli con 🍒 nel costo'));
+// --- Europa ---
+b('behaviorist','eur','por',{p:3},'Behaviorist','Behaviorist',L('Columnas con aves de 3 colores de poder distintos','Columnes amb ocells de 3 colors de poder diferents','Columns with birds of 3 different power colors','Colonnes avec 3 couleurs de pouvoir différentes','Spalten mit 3 verschiedenen Fähigkeitsfarben','Colonne con 3 colori di potere diversi'));
+b('bander','eur','tramos',{tr:[[4,4],[6,7]]},'Bird Bander','Bird Bander',L('Aves que pueden vivir en varios hábitats','Ocells que poden viure en diversos hàbitats','Birds that can live in multiple habitats','Oiseaux pouvant vivre dans plusieurs habitats','Vögel, die in mehreren Lebensräumen leben können','Uccelli che possono vivere in più habitat'));
+b('citizen','eur','tramos',{tr:[[4,3],[7,6]]},'Citizen Scientist','Citizen Scientist',L('Aves con cartas debajo','Ocells amb cartes a sota','Birds with tucked cards','Oiseaux avec des cartes glissées','Vögel mit Karten darunter','Uccelli con carte sotto'));
+b('diet','eur','tramos',{tr:[[2,3],[4,6]]},'Diet Specialist','Diet Specialist',L('Aves con un coste de 3 comidas','Ocells amb un cost de 3 menjars','Birds with a food cost of 3','Oiseaux avec un coût de 3 nourritures','Vögel mit Futterkosten von 3','Uccelli con costo di 3 cibi'));
+b('ethologist','eur','por',{p:2},'Ethologist','Ethologist',L('Colores de poder distintos en un mismo hábitat','Colors de poder diferents en un mateix hàbitat','Different power colors in any one habitat','Couleurs de pouvoir différentes dans un même habitat','Verschiedene Fähigkeitsfarben in einem Lebensraum','Colori di potere diversi in un solo habitat'));
+// --- Oceanía ---
+b('mechanical','oce','tramos',{tr:[[1,3],[2,8]]},'Mechanical Engineer','Mechanical Engineer',L('Juegos completos de los 4 tipos de nido','Jocs complets dels 4 tipus de niu','Sets of the 4 nest types','Ensembles des 4 types de nid','Sets aller 4 Nesttypen','Set dei 4 tipi di nido'));
+b('site','oce','pareja',{},'Site Selection Expert','Site Selection Expert',L('Columnas con pareja (1 pt) o trío (3 pt) de nidos iguales','Columnes amb parella (1 pt) o trio (3 pt) de nius iguals','Columns with a matching pair (1 pt) or trio (3 pt) of nests','Colonnes avec une paire (1 pt) ou un trio (3 pt) de nids identiques','Spalten mit Paar (1 P.) oder Trio (3 P.) gleicher Nester','Colonne con coppia (1 pt) o tris (3 pt) di nidi uguali'));
+['Forest','Grassland','Wetland'].forEach((h,x)=>{
+  const ic=HAB_IC[x];
+  b('da_'+x,'oce','tramos',{tr:[[3,3],[4,5],[5,8]]},h+' Data Analyst',h+' Data Analyst',L(`Aves seguidas en ${ic} con envergadura creciente o decreciente`,`Ocells seguits a ${ic} amb envergadura creixent o decreixent`,`Consecutive birds in ${ic} with ascending or descending wingspans`,`Oiseaux consécutifs en ${ic} à envergure croissante ou décroissante`,`Aufeinanderfolgende Vögel in ${ic} mit auf- oder absteigender Spannweite`,`Uccelli consecutivi in ${ic} con apertura alare crescente o decrescente`));
+});
+// --- Asia ---
+b('therio','asia','tramos',{tr:[[5,4],[7,7]]},'Avian Theriogenologist','Avian Theriogenologist',L('Aves con el nido completamente lleno','Ocells amb el niu completament ple','Birds with completely full nests','Oiseaux au nid complètement rempli','Vögel mit vollständig gefülltem Nest','Uccelli con nido completamente pieno'));
+b('endangered','asia','por',{p:3},'Endangered Species Protector','Endangered Species Protector',L('Aves que permiten puntuar o robar bonus','Ocells que permeten puntuar o robar bonus','Birds that let you score or draw bonus cards','Oiseaux permettant de marquer ou piocher des cartes Bonus','Vögel, mit denen du Bonuskarten wertest oder ziehst','Uccelli che fanno segnare o pescare carte bonus'));
+['Forest','Grassland','Wetland'].forEach((h,x)=>{
+  const ic=HAB_IC[x];
+  b('pm_'+x,'asia','tramos',{tr:[[2,3],[4,5],[5,8]]},h+' Population Monitor',h+' Population Monitor',L(`Tipos de nido distintos en ${ic} (⭐ puede ser un 5.º tipo)`,`Tipus de niu diferents a ${ic} (⭐ pot ser un 5è tipus)`,`Different nest types in ${ic} (⭐ may be a 5th type)`,`Types de nid différents en ${ic} (⭐ peut être un 5e type)`,`Verschiedene Nesttypen in ${ic} (⭐ zählt als 5. Typ)`,`Tipi di nido diversi in ${ic} (⭐ può essere un 5º tipo)`));
+  b('r_'+x,'asia','tramos',{tr:[[3,3],[4,5],[5,8]]},h+' Ranger',h+' Ranger',L(`Aves seguidas en ${ic} con puntos crecientes o decrecientes`,`Ocells seguits a ${ic} amb punts creixents o decreixents`,`Consecutive birds in ${ic} with ascending or descending scores`,`Oiseaux consécutifs en ${ic} à points croissants ou décroissants`,`Aufeinanderfolgende Vögel in ${ic} mit auf- oder absteigenden Punkten`,`Uccelli consecutivi in ${ic} con punti crescenti o decrescenti`));
+});
+b('pellet','asia','tramos',{tr:[[2,3],[4,6]]},'Pellet Dissector','Pellet Dissector',L('Fichas de 🐟 y 🐭 almacenadas en aves','Fitxes de 🐟 i 🐭 guardades en ocells','🐟 and 🐭 tokens cached on birds','Jetons 🐟 et 🐭 stockés sur des oiseaux','Auf Vögeln gelagerte 🐟 und 🐭','Gettoni 🐟 e 🐭 conservati sugli uccelli'));
+b('smallclutch','asia','tramos',{tr:[[5,3],[8,7]]},'Small Clutch Specialist','Small Clutch Specialist',L('Aves con límite de huevos de 2 o menos','Ocells amb límit d’ous de 2 o menys','Birds with an egg limit of 2 or less','Oiseaux avec une limite de 2 œufs ou moins','Vögel mit Ei-Limit von 2 oder weniger','Uccelli con limite di 2 uova o meno'));
+b('winter','asia','tramos',{tr:[[4,4],[7,7]],usa:'reserva'},'Winter Feeder','Winter Feeder',L('Comida en tu reserva al final','Menjar a la teva reserva al final','Food left in your supply at game end','Nourriture restante dans votre réserve','Futter in deinem Vorrat am Spielende','Cibo rimasto nella tua riserva'));
+// --- Américas ---
+[['apiarist','Apiarist'],['brilliant','Brilliant Specialist'],['emerald','Emerald Specialist'],['mango','Mango Specialist'],['topaz','Topaz Specialist']].forEach(([id,n],x)=>{
+  b(id,'ame','auto',{f:j=>espColi(j.colibri[x]),coli:x},n,n,null);
+});
+b('ecolodge','ame','auto',{f:j=>{const d=Math.max(...j.colibri)-Math.min(...j.colibri);return d<=2?6:d===3?3:0;}},'Ecolodge Owner','Ecolodge Owner',L('Diferencia entre tu ficha más alta y la más baja: 0–2→6, 3→3, 4+→0','Diferència entre la teva fitxa més alta i la més baixa: 0–2→6, 3→3, 4+→0','Difference between your highest and lowest token: 0–2→6, 3→3, 4+→0','Écart entre votre jeton le plus haut et le plus bas : 0–2→6, 3→3, 4+→0','Unterschied zwischen höchstem und niedrigstem Marker: 0–2→6, 3→3, 4+→0','Differenza tra il segnalino più alto e il più basso: 0–2→6, 3→3, 4+→0'));
+b('hgardener','ame','auto',{f:j=>2*j.colibri.filter(v=>v>=4).length},'Hummingbird Gardener','Hummingbird Gardener',L('Fichas de colibrí que valen 4 o más: 2 cada una','Fitxes de colibrí que valen 4 o més: 2 cadascuna','Hummingbird tokens worth at least 4: 2 each','Jetons colibri valant au moins 4 : 2 chacun','Kolibri-Marker mit mindestens 4: je 2','Segnalini colibrì che valgono almeno 4: 2 ciascuno'));
+b('hcounter','ame','por',{p:1},'Hummingbird Counter','Hummingbird Counter',L('Casillas con colibrí alcanzadas en tu pista','Caselles amb colibrí assolides a la teva pista','Hummingbird spaces reached on your track','Cases colibri atteintes sur votre piste','Erreichte Kolibri-Felder auf deiner Leiste','Caselle colibrì raggiunte sul tuo tracciato'));
+const BONUS_ID = Object.fromEntries(B.map(x=>[x.id,x]));
+function espColi(v){ return v>=10?6 : v>=6?4 : v>=3?3 : 0; }
+const VAL_COLI=[-3,0,1,2,3,4,6,8,10];
+const COLI_IC=['🐝','✦','⬢','🔥','💎'];
+const RONDA_VERDE=[[4,1,0],[5,2,1],[6,3,2],[7,4,3]];
+const CUBOS=['#4a86c5','#c9574a','#d9aa38','#8466b3','#559d67','#d987a6','#7d8b93'];
+const HAB_COL=['var(--bosque)','var(--pradera)','var(--humedal)'];
+function rombo(x){
+  const dib=[
+    '<circle cx="9.5" cy="10" r="2.6" fill="#fff"/><circle cx="14.5" cy="10" r="2.6" fill="#fff"/><path d="M9.5 12v4M14.5 12v4" stroke="#fff" stroke-width="1.2"/>',
+    '<path d="M12 17c0-4-2-7-4-9M12 17c0-4 1-8 3-10M12 17c0-3 2-5 4-6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/>',
+    '<path d="M7 10c1.5-1.2 3-1.2 5 0s3.5 1.2 5 0M7 13c1.5-1.2 3-1.2 5 0s3.5 1.2 5 0M7 16c1.5-1.2 3-1.2 5 0s3.5 1.2 5 0" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/>'][x];
+  return `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" rx="2" transform="rotate(45 12 12)" fill="${HAB_COL[x]}"/>${dib}</svg>`;
+}
+function icoColi(x){
+  const d=[
+    '<ellipse cx="12" cy="13" rx="6" ry="5" fill="#e8b830"/><path d="M9 9v8M12 8v10M15 9v8" stroke="#3a3326" stroke-width="1.5"/><ellipse cx="9" cy="6.5" rx="3" ry="2" fill="#cfe3f0" opacity=".9"/><ellipse cx="15" cy="6.5" rx="3" ry="2" fill="#cfe3f0" opacity=".9"/>',
+    '<path d="M12 3l2 6.5L21 12l-7 2.5L12 21l-2-6.5L3 12l7-2.5z" fill="#8a3fa3"/>',
+    '<path d="M9 3h6l3 4v10l-3 4H9l-3-4V7z" fill="#2f8f55"/><path d="M9.5 7h5v10h-5z" fill="none" stroke="#bfe8cd" stroke-width="1"/>',
+    '<path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z" fill="#e8582e"/>',
+    '<path d="M4 9l3-4h10l3 4-8 11z" fill="#9fd3f0"/><path d="M4 9h16M9 5l3 15 3-15" stroke="#fff" stroke-width=".8" fill="none"/>'][x];
+  return `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" style="width:24px;height:24px">${d}</svg>`;
+}
+
+
+/* ============ IDIOMA Y TEMA ============ */
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function idiomaInicial(){
+  const g=lsGet(K.idioma); if(g&&T[g]) return g;
+  for(const k of ['ludoteca-idioma','catan-idioma','rw_idioma']){ const v=lsGet(k); if(v&&T[v]) return v; }
+  const a=lsGet('agricola-idioma'); if(a){ try{ const v=JSON.parse(a); if(T[v]) return v; }catch(e){} }
+  for(const l of (navigator.languages||[navigator.language||'en'])){ const c=(l||'').slice(0,2).toLowerCase(); if(T[c]) return c; }
+  return 'en';
+}
+let LANG=idiomaInicial();
+const t=k=>T[LANG][k]??T.es[k];
+const fmt=(s,o)=>s.replace(/\{(\w+)\}/g,(m,k)=>o[k]);
+function nomCarta(c){ return (LANG==='es'||LANG==='ca')?c.nes:c.nen; }
+function descCarta(c){
+  if(c.coli!==undefined){ const n=t('coliN')[c.coli]; return {es:`Valor de tu ficha ${COLI_IC[c.coli]} ${n}`,ca:`Valor de la teva fitxa ${COLI_IC[c.coli]} ${n}`,en:`Value of your ${COLI_IC[c.coli]} ${n} token`,fr:`Valeur de votre jeton ${COLI_IC[c.coli]} ${n}`,de:`Wert deines ${COLI_IC[c.coli]} ${n}-Markers`,it:`Valore del tuo segnalino ${COLI_IC[c.coli]} ${n}`}[LANG]+': 3–4→3, 6–8→4, 10→6'; }
+  return c.q[LANG]||c.q.es;
+}
+let TEMA = lsGet(K.tema)||'auto';
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+function aplicarTema(){
+  const noche = TEMA==='noche' || (TEMA==='auto' && mq.matches);
+  document.documentElement.dataset.tema = noche?'noche':'dia';
+  document.querySelector('meta[name=theme-color]').content = noche?'#151f28':'#f3efe4';
+  $('#btnTema').textContent = TEMA==='auto'?'🌗':TEMA==='dia'?'☀️':'🌙';
+}
+mq.addEventListener && mq.addEventListener('change',aplicarTema);
+
+/* ============ ESTADO ============ */
+function nuevoJugador(){ return {nombre:'',aves:0,huevos:0,comida:0,bajo:0,reserva:0,rondas:[0,0,0,0],rondasMan:[0,0,0,0],nectar:[0,0,0],colibri:[-3,-3,-3,-3,-3],duelo:0,bonus:[],bonusMan:0}; }
+function nuevoEstado(){ return {cfg:{n:3,exp:{eur:false,oce:false,asia:false,ame:false},lado:'verde',duelo:false},jug:[0,1,2].map(nuevoJugador),activo:0,empezada:false,guardada:false}; }
+function cargar(){ try{ const e=JSON.parse(lsGet(K.estado)); if(e&&e.jug&&e.cfg){ e.jug=e.jug.map(j=>Object.assign(nuevoJugador(),j)); return e; } }catch(e){} return null; }
+let E = cargar() || nuevoEstado();
+function guardar(){ lsSet(K.estado, JSON.stringify(E)); }
+function nombre(i){ return (E.jug[i].nombre||'').trim() || (t('jugador')+' '+(i+1)); }
+const licOK = ()=>lsGet(K.lic)==='true';
+const pruebasUsadas = ()=>parseInt(lsGet(K.pruebas)||'0',10)||0;
+const pruebasQuedan = ()=>Math.max(0,LICENCIA.pruebas-pruebasUsadas());
+
+/* ============ CÁLCULOS ============ */
+function repartir(cant,valores){
+  const res=cant.map(()=>0);
+  const orden=cant.map((c,i)=>({c,i})).filter(o=>o.c>0).sort((a,b)=>b.c-a.c);
+  let p=0,k=0;
+  while(k<orden.length){
+    const g=[orden[k]]; while(k+g.length<orden.length&&orden[k+g.length].c===orden[k].c) g.push(orden[k+g.length]);
+    let s=0; for(let x=0;x<g.length;x++) s+=valores[p+x]||0;
+    const cada=Math.floor(s/g.length); g.forEach(o=>res[o.i]=cada);
+    p+=g.length; k+=g.length;
+  }
+  return res;
+}
+function puntosRondas(){
+  const out=E.jug.map(()=>[0,0,0,0]);
+  for(let r=0;r<4;r++){
+    if(E.cfg.duelo||E.cfg.lado==='manual') E.jug.forEach((j,i)=>out[i][r]=j.rondasMan[r]||0);
+    else if(E.cfg.lado==='azul') E.jug.forEach((j,i)=>out[i][r]=Math.min(5,Math.max(0,j.rondas[r]||0)));
+    else repartir(E.jug.map(j=>j.rondas[r]||0),RONDA_VERDE[r]).forEach((v,i)=>out[i][r]=v);
+  }
+  return out;
+}
+function puntosNectar(){
+  const out=E.jug.map(()=>[0,0,0]); if(!E.cfg.exp.oce) return out;
+  for(let h=0;h<3;h++) repartir(E.jug.map(j=>j.nectar[h]||0),[5,2]).forEach((v,i)=>out[i][h]=v);
+  return out;
+}
+function puntosCarta(j,bn){
+  const c=BONUS_ID[bn.id]; if(!c) return 0;
+  const v=c.usa?(j[c.usa]||0):(bn.v||0);
+  if(c.t==='por') return v*c.p;
+  if(c.t==='pareja') return (bn.v||0)+(bn.v2||0)*3;
+  if(c.t==='auto') return E.cfg.exp.ame?c.f(j):0;
+  let p=0; c.tr.forEach(([m,q])=>{ if(v>=m) p=q; }); return p;
+}
+function cartaActiva(bn){ const c=BONUS_ID[bn.id]; return c&&(c.e==='base'||E.cfg.exp[c.e]); }
+function puntosBonus(j){ return j.bonus.filter(cartaActiva).reduce((s,bn)=>s+puntosCarta(j,bn),0)+(j.bonusMan||0); }
+function desglose(){
+  const R=puntosRondas(),N=puntosNectar();
+  return E.jug.map((j,i)=>{
+    const d={aves:j.aves||0,bonus:puntosBonus(j),rondas:R[i].reduce((a,b)=>a+b,0),huevos:j.huevos||0,comida:j.comida||0,bajo:j.bajo||0,
+      nectar:N[i].reduce((a,b)=>a+b,0),colibri:E.cfg.exp.ame?j.colibri.reduce((a,b)=>a+b,0):0,duelo:E.cfg.duelo?(j.duelo||0):0,rondasDet:R[i],nectarDet:N[i]};
+    d.total=d.aves+d.bonus+d.rondas+d.huevos+d.comida+d.bajo+d.nectar+d.colibri+d.duelo; return d;
+  });
+}
+function clasificacion(){
+  const D=desglose();
+  const o=D.map((d,i)=>({d,i,res:E.jug[i].reserva||0})).sort((a,b)=>b.d.total-a.d.total||b.res-a.res);
+  let p=0,prev=null; o.forEach((x,k)=>{ const c=x.d.total+'|'+x.res; if(c!==prev){p=k+1;prev=c;} x.p=p; });
+  return o;
+}
+
+/* ============ PINTAR ============ */
+function $(s){ return document.querySelector(s); }
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+let pantalla='entrada';
+
+function pintarEntrada(){ $('#entSub').textContent=t('contador'); $('#entToca').textContent=t('toca'); }
+function pintar(){
+  document.documentElement.lang=LANG;
+  $('#gira').textContent=t('gira');
+  pintarEntrada();
+  $('#btnFin').textContent=t('verRes');
+  $('#entrada').classList.toggle('oculto',pantalla!=='entrada');
+  $('#cab').classList.toggle('oculto',pantalla==='entrada');
+  $('#barraTotal').classList.toggle('oculto',pantalla!=='juego');
+  $('#btnAjustes').classList.toggle('oculto',pantalla==='acceso');
+  if(pantalla==='acceso') return pintarAcceso();
+  if(pantalla==='ajustes') return pintarAjustes();
+  if(pantalla==='juego') return pintarJuego();
+}
+function pie(){ return `<div class="pie"><button id="btnLegal">${t('aviso')} · ${VERSION}</button></div>`; }
+
+function pintarAcceso(){
+  $('#tabs').innerHTML='';
+  const q=pruebasQuedan();
+  $('#main').innerHTML=`<section class="panel acceso" data-c="pradera"><h2 style="justify-content:center"><span class="trazo">${t('acceso')}</span></h2>
+    <input type="text" id="inClave" placeholder="${t('clave')}" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <button class="boton" id="btnActivar">${t('activar')}</button>
+    <p class="msg" id="msgClave"></p>
+    <p class="nota">${t('clavePie')}</p>
+    <button class="boton oro" id="btnComprar">${t('comprar')}</button>
+    ${q>0?`<button class="boton claro" id="btnProbar">${t('probar')}</button><p class="nota">${q===1?t('quedan1'):fmt(t('quedan'),{n:q})}</p>`:`<p class="nota">${fmt(t('agotada'),{n:LICENCIA.pruebas})}</p>`}
+  </section>${pie()}`;
+}
+
+function pintarAjustes(){
+  $('#tabs').innerHTML='';
+  const c=E.cfg;
+  $('#main').innerHTML=`<section class="panel" data-c="humedal"><h2><span class="trazo">${t('jugadores')}</span></h2>
+    <div class="seg" id="segN">${[1,2,3,4,5,6,7].map(n=>`<button data-n="${n}" class="${c.n===n?'activo':''}">${n}</button>`).join('')}</div>
+    <div class="nombres">${E.jug.map((j,i)=>`<input type="text" maxlength="18" data-nom="${i}" placeholder="${t('jugador')} ${i+1}" value="${esc(j.nombre)}">`).join('')}</div>
+    ${c.n>5?`<p class="nota">${t('bandada')}</p>`:''}
+  </section>
+  <section class="panel" data-c="bosque"><h2><span class="trazo">${t('expansiones')}</span></h2>
+    ${['eur','oce','asia','ame'].map(x=>`<label class="chk"><input type="checkbox" data-exp="${x}" ${c.exp[x]?'checked':''}><span>${t('exp')[x]}<small>${t('expD')[x]}</small></span></label>`).join('')}
+    ${c.exp.asia&&c.n===2?`<label class="chk"><input type="checkbox" id="chkDuelo" ${c.duelo?'checked':''}><span>${t('duelo')}<small>${t('dueloD')}</small></span></label>`:''}
+  </section>
+  <section class="panel" data-c="humedal"><h2><span class="trazo">${t('objetivos')}</span></h2>
+    <div class="seg">${['verde','azul','manual'].map(l=>`<button data-lado="${l}" class="${c.lado===l?'activo':''}">${t(l)}<small>${t(l+'S')}</small></button>`).join('')}</div>
+  </section>
+  <div class="barra">
+    <button class="boton claro" id="btnArchivo">${t('archivo')}</button>
+    ${E.empezada?`<button class="boton peligro" id="btnNueva">${t('nueva')}</button>`:''}
+  </div>
+  <div class="barra"><button class="boton oro" id="btnEmpezar">${E.empezada?t('volverRec'):t('empezar')}</button></div>
+  ${pie()}`;
+}
+
+function paso(path,val){ return `<div class="ctrl"><button data-d="${path}" data-v="-1" aria-label="−">−</button><input type="number" inputmode="numeric" pattern="-?[0-9]*" data-p="${path}" value="${val}"><button data-d="${path}" data-v="1" aria-label="+">+</button></div>`; }
+function fila(tx,sub,path){ return `<div class="fila"><label>${tx}<small>${sub}</small></label>${paso(path,leer(E.jug[E.activo],path))}</div>`; }
+function tramosTxt(c){
+  if(c.t==='por') return ' · '+fmt(t('porCada'),{p:c.p});
+  if(c.t!=='tramos') return '';
+  return ' · '+c.tr.map(([m,p],x)=>{ const sig=c.tr[x+1]; const r= sig ? (sig[0]-1>m?`${m}–${sig[0]-1}`:`${m}`) : `${m}+`; return `${r}→${p}`; }).join(', ');
+}
+
+function pintarJuego(){
+  const D=desglose(),a=E.activo,j=E.jug[a],d=D[a];
+  $('#tabs').innerHTML=E.jug.map((x,i)=>`<button class="tab ${i===a?'activo':''}" data-tab="${i}" style="--cubo:${CUBOS[i%CUBOS.length]}"><i class="cubo"></i><span>${esc(nombre(i))}<small>${D[i].total} ${t('pts')}</small></span></button>`).join('');
+  $('#nombreActivo').textContent=nombre(a);
+  { const el=$('#totalActivo'); if(el.textContent!==String(d.total)&&el.textContent!==''){ el.classList.remove('late'); void el.offsetWidth; el.classList.add('late'); } el.textContent=d.total; }
+  const fr=t('frases');
+  let h=`<div class="frase">${fr[a%fr.length]}</div>`;
+  h+=`<section class="panel" data-c="bosque"><h2><span class="trazo">${t('avesRec')}</span> <em>${d.aves+d.huevos+d.comida+d.bajo}</em></h2>
+    ${fila(t('aves'),t('avesS'),'aves')}${fila(t('huevos'),t('huevosS'),'huevos')}${fila(t('comida'),t('comidaS'),'comida')}${fila(t('bajo'),t('bajoS'),'bajo')}</section>`;
+  const man=E.cfg.duelo||E.cfg.lado==='manual';
+  const txt=E.cfg.duelo?t('ladoDuelo'):E.cfg.lado==='verde'?t('ladoVerde'):E.cfg.lado==='azul'?t('ladoAzul'):t('ladoMan');
+  h+=`<section class="panel" data-c="humedal"><h2><span class="trazo">${t('objetivos')}</span> <em>${d.rondas}</em></h2><p class="nota">${txt}</p><div class="grid4">`;
+  for(let r=0;r<4;r++){ const campo=man?'rondasMan':'rondas'; h+=`<div><label>${t('ronda')} ${r+1}</label><input type="number" inputmode="numeric" data-p="${campo}.${r}" value="${j[campo][r]}">${man?'':`<b>${d.rondasDet[r]} ${t('pts')}</b>`}</div>`; }
+  h+=`</div></section>`;
+  // Bonus
+  h+=`<section class="panel" data-c="pradera"><h2><span class="trazo">${t('bonus')}</span> <em>${d.bonus}</em></h2>`;
+  j.bonus.forEach((bn,k)=>{
+    const c=BONUS_ID[bn.id]; if(!c||!cartaActiva(bn)) return;
+    let ctrl='';
+    if(c.t==='auto') ctrl=`<p class="nota">${t('autoColi')}</p>`;
+    else if(c.usa==='reserva') ctrl=`<p class="nota">${fmt(t('usaReserva'),{n:j.reserva||0})}</p>`;
+    else if(c.t==='pareja') ctrl=`<div class="fila"><label>${t('pareja')}</label>${paso(`bonus.${k}.v`,bn.v||0)}</div><div class="fila"><label>${t('trio')}</label>${paso(`bonus.${k}.v2`,bn.v2||0)}</div>`;
+    else ctrl=`<div class="fila"><label>${t('cantidad')}</label>${paso(`bonus.${k}.v`,bn.v||0)}</div>`;
+    h+=`<div class="bonus"><div class="tit"><span>${esc(nomCarta(c))}</span><span class="pts">${puntosCarta(j,bn)}</span><button data-quita="${k}" aria-label="${t('quitar')}">×</button></div><div class="desc">${esc(descCarta(c))}${c.t==='auto'?'':tramosTxt(c)}</div>${ctrl}</div>`;
+  });
+  const disp=B.filter(c=>c.e==='base'||E.cfg.exp[c.e]).sort((x,y)=>nomCarta(x).localeCompare(nomCarta(y),LANG));
+  h+=`<div class="anadir"><select id="selBonus" aria-label="${t('anadirBonus')}"><option value="">${t('anadirBonus')}</option>${disp.map(c=>`<option value="${c.id}">${esc(nomCarta(c))}${c.e!=='base'?' · '+t('exp')[c.e]:''}</option>`).join('')}</select><button class="boton" id="btnAddBonus">＋</button></div>`;
+  h+=`<div class="fila"><label>${t('otrosBonus')}<small>${t('otrosBonusS')}</small></label>${paso('bonusMan',j.bonusMan||0)}</div></section>`;
+  if(E.cfg.exp.oce){
+    h+=`<section class="panel" data-c="rosa"><h2><span class="trazo">${t('nectar')}</span> <em>${d.nectar}</em></h2><p class="nota">${t('nectarS')}</p><div class="grid3">`;
+    t('habs').forEach((hb,x)=>{ h+=`<div><label>${rombo(x)} ${hb}</label><input type="number" inputmode="numeric" data-p="nectar.${x}" value="${j.nectar[x]}"><b>${d.nectarDet[x]} ${t('pts')}</b></div>`; });
+    h+=`</div></section>`;
+  }
+  if(E.cfg.exp.ame){
+    h+=`<section class="panel" data-c="salmon"><h2><span class="trazo">${t('coli')}</span> <em>${d.colibri}</em></h2><p class="nota">${t('coliS')}</p><div class="colis">`;
+    t('coliN').forEach((c,x)=>{ h+=`<div><label>${icoColi(x)}${c}</label><select data-p="colibri.${x}" aria-label="${c}">${VAL_COLI.map(v=>`<option value="${v}" ${v===j.colibri[x]?'selected':''}>${v>0?'+':''}${v}</option>`).join('')}</select></div>`; });
+    h+=`</div></section>`;
+  }
+  if(E.cfg.duelo) h+=`<section class="panel" data-c="morado"><h2><span class="trazo">${t('dueloT')}</span> <em>${d.duelo}</em></h2>${fila(t('dueloM'),t('dueloMS'),'duelo')}</section>`;
+  h+=`<section class="panel" data-c="pradera"><h2><span class="trazo">${t('desempate')}</span></h2>${fila(t('reserva'),t('reservaS'),'reserva')}</section>`;
+  h+=pie();
+  $('#main').innerHTML=h;
+}
+
+function leer(o,p){ return p.split('.').reduce((x,k)=>x==null?x:x[k],o); }
+function escribir(o,p,v){ const k=p.split('.'),u=k.pop(); k.reduce((x,y)=>x[y],o)[u]=v; }
+function admiteNeg(p){ return p.startsWith('colibri')||p.startsWith('rondasMan')||p==='bonusMan'; }
+function fijar(p,v){ v=parseInt(v,10); if(isNaN(v)) v=0; if(!admiteNeg(p)) v=Math.max(0,v); v=Math.min(999,Math.max(-99,v)); escribir(E.jug[E.activo],p,v); E.guardada=false; guardar(); pintar(); }
+function ponerN(n){ E.cfg.n=n; while(E.jug.length<n) E.jug.push(nuevoJugador()); E.jug.length=n; if(n!==2) E.cfg.duelo=false; if(E.activo>=n) E.activo=0; guardar(); }
+
+/* ============ HOJAS ============ */
+function abrirHoja(html){ $('#hoja').innerHTML=html; $('#velo').classList.remove('oculto'); $('#hoja').scrollTop=0; }
+function cerrarHoja(){ $('#velo').classList.add('oculto'); }
+function avisar(txt){ const a=document.createElement('div'); a.className='aviso'; a.textContent=txt; document.body.appendChild(a); setTimeout(()=>a.remove(),2200); }
+
+function abrirResultado(conConfeti){
+  const o=clasificacion(), F=t('filas');
+  let h=`<h2><span class="trazo">${t('resultado')}</span></h2><ol class="podio">${o.map(x=>`<li class="${x.p===1?'primero':''}"><span>${ORD[LANG](x.p)} ${esc(nombre(x.i))}${x.p===1?' 🏆':''}</span><span>${x.d.total} ${t('pts')}</span></li>`).join('')}</ol>`;
+  if(o.length>1&&o[0].d.total===o[1].d.total) h+=`<p class="nota">${t('empate')}${o[0].p===o[1].p?t('empateComp'):''}</p>`;
+  const filas=['aves','bonus','rondas','huevos','comida','bajo']; if(E.cfg.exp.oce) filas.push('nectar'); if(E.cfg.exp.ame) filas.push('colibri'); if(E.cfg.duelo) filas.push('duelo');
+  h+=`<div style="overflow-x:auto"><table><tr><th></th>${o.map(x=>`<th>${esc(nombre(x.i))}</th>`).join('')}</tr>`;
+  filas.forEach(k=>{ h+=`<tr><td>${F[k]}</td>${o.map(x=>`<td>${x.d[k]}</td>`).join('')}</tr>`; });
+  h+=`<tr class="gana"><td>${F.total}</td>${o.map(x=>`<td>${x.d.total}</td>`).join('')}</tr><tr><td>${F.reserva}</td>${o.map(x=>`<td>${x.res}</td>`).join('')}</tr></table></div>`;
+  h+=`<div class="barra" style="margin-top:14px"><button class="boton claro" id="btnCerrar">${t('volver')}</button><button class="boton oro" id="btnTerminar" ${E.guardada?'disabled':''}>${E.guardada?t('guardada'):t('terminar')}</button></div>
+      <div class="barra"><button class="boton peligro" id="btnNueva">${t('nueva')}</button></div>`;
+  abrirHoja(h); if(conConfeti!==false) confeti();
+}
+function terminar(){
+  if(E.guardada) return;
+  const o=clasificacion();
+  const reg={fecha:Date.now(),exp:Object.keys(E.cfg.exp).filter(k=>E.cfg.exp[k]),lado:E.cfg.lado,duelo:E.cfg.duelo,
+    jug:o.map(x=>({nombre:nombre(x.i),p:x.p,total:x.d.total,res:x.res,d:{aves:x.d.aves,bonus:x.d.bonus,rondas:x.d.rondas,huevos:x.d.huevos,comida:x.d.comida,bajo:x.d.bajo,nectar:x.d.nectar,colibri:x.d.colibri,duelo:x.d.duelo}}))};
+  let H=[]; try{ H=JSON.parse(lsGet(K.hist))||[]; }catch(e){}
+  H.unshift(reg); H=H.slice(0,200); lsSet(K.hist,JSON.stringify(H));
+  E.guardada=true; guardar(); avisar(t('guardadaMsg')); abrirResultado(false);
+}
+let confirmaVaciar=false;
+function abrirArchivo(){
+  let H=[]; try{ H=JSON.parse(lsGet(K.hist))||[]; }catch(e){}
+  const F=t('filas');
+  let h=`<h2><span class="trazo">${t('archivo')}</span></h2>`;
+  if(!H.length) h+=`<p class="nota">${t('archVacio')}</p>`;
+  H.forEach((r,k)=>{
+    const g=r.jug.filter(x=>x.p===1);
+    const fecha=new Date(r.fecha).toLocaleDateString(LANG,{day:'numeric',month:'short',year:'numeric'});
+    const ex=[t('base'),...r.exp.map(e=>t('exp')[e])].join(' + ');
+    const cols=['aves','bonus','rondas','huevos','comida','bajo'].concat(r.exp.includes('oce')?['nectar']:[],r.exp.includes('ame')?['colibri']:[],r.duelo?['duelo']:[]);
+    h+=`<div class="ficha"><div class="cab2"><span>${fecha}</span><span>${esc(ex)}</span></div>
+      <div class="gan">🏆 ${esc(g.map(x=>x.nombre).join(', '))} · ${g[0]?g[0].total:0} ${t('pts')}</div>
+      <div class="det oculto" id="det${k}"><div style="overflow-x:auto"><table><tr><th></th>${r.jug.map(x=>`<th>${esc(x.nombre)}</th>`).join('')}</tr>
+      ${cols.map(c=>`<tr><td>${F[c]}</td>${r.jug.map(x=>`<td>${x.d[c]}</td>`).join('')}</tr>`).join('')}
+      <tr class="gana"><td>${F.total}</td>${r.jug.map(x=>`<td>${x.total}</td>`).join('')}</tr></table></div></div>
+      <div class="acc"><button class="boton claro" data-ver="${k}">${t('ver')}</button><button class="boton peligro" data-borra="${k}">${t('borrar')}</button></div></div>`;
+  });
+  h+=`<div class="barra">${H.length?`<button class="boton peligro" id="btnVaciar">${t('vaciar')}</button>`:''}<button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
+  confirmaVaciar=false; abrirHoja(h);
+}
+function abrirLegal(){ abrirHoja(`<h2><span class="trazo">${t('aviso')}</span></h2><p>${t('legal')}</p><p class="nota">Wingspan · ${t('contador')} · ${VERSION} · PenTech</p><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`); }
+
+/* ============ MENÚS ============ */
+function cerrarMenus(){ $('#menuIdioma').classList.add('oculto'); $('#menuTema').classList.add('oculto'); }
+function abrirMenuIdioma(){
+  const m=$('#menuIdioma'); const ab=m.classList.contains('oculto'); cerrarMenus(); if(!ab) return;
+  m.innerHTML=Object.entries(IDIOMAS).map(([k,v])=>`<button data-lang="${k}" class="${k===LANG?'activo':''}">${v}</button>`).join(''); m.classList.remove('oculto');
+}
+function abrirMenuTema(){
+  const m=$('#menuTema'); const ab=m.classList.contains('oculto'); cerrarMenus(); if(!ab) return;
+  m.innerHTML=[['auto','🌗'],['dia','☀️'],['noche','🌙']].map(([k,i])=>`<button data-tema="${k}" class="${k===TEMA?'activo':''}"><span>${i}</span>${t(k)}</button>`).join(''); m.classList.remove('oculto');
+}
+
+/* ============ SONIDO Y CONFETI ============ */
+let AC=null;
+function audio(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){ AC=null; } return AC; }
+function pio(t0,f1,f2,dur,vol){
+  const a=AC,o=a.createOscillator(),g=a.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(f1,t0); o.frequency.exponentialRampToValueAtTime(f2,t0+dur*0.7); o.frequency.exponentialRampToValueAtTime(f1*0.9,t0+dur);
+  g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol,t0+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g).connect(a.destination); o.start(t0); o.stop(t0+dur+0.02);
+}
+function canto(){ // trino original de pájaro, sintetizado
+  const a=audio(); if(!a) return; const t0=a.currentTime+0.05;
+  [[0,2600,3400,.09],[.12,2700,3600,.08],[.23,2800,3800,.08],[.42,2200,3000,.14],[.62,3200,2400,.18],[.9,2600,3500,.07],[.99,2700,3600,.07],[1.08,2800,3900,.1]].forEach(([d,f1,f2,du])=>pio(t0+d,f1,f2,du,0.12));
+}
+function confeti(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv=document.createElement('canvas'); cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:45'; cv.width=innerWidth; cv.height=innerHeight; document.body.appendChild(cv);
+  const x=cv.getContext('2d'), col=['#c99a3b','#3f7a68','#8fc7d8','#e07a62','#f4e3b5'];
+  const P=Array.from({length:90},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*0.4,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,r:Math.random()*6.28,vr:(Math.random()-.5)*.2,c:col[Math.floor(Math.random()*col.length)],w:5+Math.random()*5}));
+  let n=0; (function paso(){ x.clearRect(0,0,cv.width,cv.height); P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.w/4,p.w,p.w/2);x.restore();}); if(++n<170) requestAnimationFrame(paso); else cv.remove(); })();
+}
+
+/* ============ EVENTOS ============ */
+function entrar(){
+  canto();
+  pantalla = (licOK()||E.empezada) ? (E.empezada?'juego':'ajustes') : 'acceso';
+  pintar(); window.scrollTo(0,0);
+}
+function empezar(){
+  if(!E.empezada){
+    if(!licOK()){
+      if(pruebasQuedan()<=0){ pantalla='acceso'; pintar(); return; }
+      lsSet(K.pruebas,String(pruebasUsadas()+1));
+    }
+    E.empezada=true; E.guardada=false; E.activo=0;
+  }
+  guardar(); pantalla='juego'; pintar(); window.scrollTo(0,0);
+}
+function nuevaPartida(){
+  if(!confirm(t('confNueva'))) return;
+  E.jug=E.jug.map(j=>Object.assign(nuevoJugador(),{nombre:j.nombre}));
+  E.activo=0; E.empezada=false; E.guardada=false; guardar(); cerrarHoja();
+  pantalla = licOK()||pruebasQuedan()>0 ? 'ajustes' : 'acceso'; pintar(); window.scrollTo(0,0);
+}
+function activarClave(){
+  const v=($('#inClave').value||'').toUpperCase().replace(/[\s-]/g,'');
+  const ok=v===LICENCIA.clave.replace(/-/g,'');
+  const m=$('#msgClave');
+  if(ok){ lsSet(K.lic,'true'); m.className='msg bien'; m.textContent=t('activada'); setTimeout(()=>{ pantalla=E.empezada?'juego':'ajustes'; pintar(); },700); }
+  else { m.className='msg mal'; m.textContent=t('claveMal'); }
+}
+
+$('#entrada').addEventListener('click',entrar);
+document.addEventListener('keydown',e=>{
+  if(pantalla==='entrada'&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); entrar(); }
+  if(e.key==='Escape'){ cerrarMenus(); cerrarHoja(); }
+  if(e.key==='Enter'&&e.target.id==='inClave') activarClave();
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.conMenu')) cerrarMenus();
+  const b=e.target.closest('button'); if(!b) return;
+  const ds=b.dataset;
+  if(ds.tab!==undefined){ E.activo=+ds.tab; guardar(); pintar(); window.scrollTo(0,0); return; }
+  if(ds.d){ fijar(ds.d,(leer(E.jug[E.activo],ds.d)||0)+(+ds.v)); return; }
+  if(ds.quita!==undefined){ E.jug[E.activo].bonus.splice(+ds.quita,1); E.guardada=false; guardar(); pintar(); return; }
+  if(ds.n){ ponerN(+ds.n); pintar(); return; }
+  if(ds.lado){ E.cfg.lado=ds.lado; E.guardada=false; guardar(); pintar(); return; }
+  if(ds.lang){ LANG=ds.lang; lsSet(K.idioma,LANG); cerrarMenus(); pintar(); if(!$('#velo').classList.contains('oculto')) cerrarHoja(); return; }
+  if(ds.tema){ TEMA=ds.tema; lsSet(K.tema,TEMA); aplicarTema(); cerrarMenus(); return; }
+  if(ds.ver!==undefined){ const d=$('#det'+ds.ver); d.classList.toggle('oculto'); b.textContent=d.classList.contains('oculto')?t('ver'):t('ocultar'); return; }
+  if(ds.borra!==undefined){ let H=[]; try{H=JSON.parse(lsGet(K.hist))||[];}catch(_){} H.splice(+ds.borra,1); lsSet(K.hist,JSON.stringify(H)); abrirArchivo(); return; }
+  switch(b.id){
+    case 'btnIdioma': abrirMenuIdioma(); break;
+    case 'btnTema': abrirMenuTema(); break;
+    case 'btnAjustes': cerrarHoja(); pantalla=pantalla==='ajustes'&&E.empezada?'juego':'ajustes'; pintar(); window.scrollTo(0,0); break;
+    case 'btnAddBonus': { const id=$('#selBonus').value; if(!id) return; E.jug[E.activo].bonus.push({id,v:0,v2:0}); E.guardada=false; guardar(); pintar(); break; }
+    case 'btnEmpezar': empezar(); break;
+    case 'btnFin': abrirResultado(true); break;
+    case 'btnCerrar': cerrarHoja(); break;
+    case 'btnTerminar': terminar(); break;
+    case 'btnNueva': nuevaPartida(); break;
+    case 'btnArchivo': abrirArchivo(); break;
+    case 'btnLegal': abrirLegal(); break;
+    case 'btnActivar': activarClave(); break;
+    case 'btnComprar': window.open(LICENCIA.compra,'_blank','noopener'); break;
+    case 'btnProbar': pantalla='ajustes'; pintar(); break;
+    case 'btnVaciar': if(!confirmaVaciar){ confirmaVaciar=true; b.textContent=t('otraVez'); } else { lsSet(K.hist,'[]'); abrirArchivo(); } break;
+  }
+});
+document.addEventListener('change',e=>{
+  const x=e.target;
+  if(x.dataset.p){ fijar(x.dataset.p,x.value); return; }
+  if(x.dataset.exp){ E.cfg.exp[x.dataset.exp]=x.checked; if(x.dataset.exp==='asia'&&!x.checked) E.cfg.duelo=false; E.guardada=false; guardar(); pintar(); return; }
+  if(x.id==='chkDuelo'){ E.cfg.duelo=x.checked; guardar(); pintar(); return; }
+});
+document.addEventListener('input',e=>{ const x=e.target; if(x.dataset.nom!==undefined){ E.jug[+x.dataset.nom].nombre=x.value; guardar(); } });
+document.addEventListener('focusin',e=>{ if(e.target.type==='number') setTimeout(()=>{ try{ e.target.select(); }catch(_){} },0); });
+document.addEventListener('contextmenu',e=>{ if(!e.target.closest('.hoja')&&!e.target.closest('input')) e.preventDefault(); });
+$('#velo').addEventListener('click',e=>{ if(e.target.id==='velo') cerrarHoja(); });
+document.addEventListener('gesturestart',e=>e.preventDefault());
+
+aplicarTema();
+pintar();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
