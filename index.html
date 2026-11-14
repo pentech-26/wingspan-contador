@@ -292,6 +292,17 @@
   .panel{border:1px solid var(--borde-hoja);box-shadow:var(--sombra-hoja)}
   .tab,.redondo{border-color:var(--borde-hoja)}
   .total{background:var(--hoja)}
+
+  .abreBonus{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 4px;padding:12px;border:1.5px dashed var(--celda-borde);border-radius:8px;background:var(--celda);color:var(--tinta);font-family:var(--serif);font-size:1.05rem;cursor:pointer}
+  .abreBonus span{width:30px;height:30px;border-radius:50%;background:var(--bosque);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.2rem}
+  #buscaBonus{margin:0 0 10px}
+  .grupoT{font-family:var(--versal);font-weight:700;font-size:1.2rem;color:var(--marron);margin:12px 2px 4px;border-bottom:1px solid var(--borde-hoja);padding-bottom:3px}
+  .opcB{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px dashed var(--linea);background:none;color:var(--tinta);padding:11px 4px;font-family:var(--serif);font-size:1.05rem;cursor:pointer}
+  .opcB b{font-weight:500}
+  .opcB i{font-style:italic;color:var(--gris);font-size:.92rem;white-space:nowrap}
+  .opcB:active{background:var(--resalte)}
+  html[data-tema=noche] .boton.claro{color:var(--tinta)}
+  html[data-tema=noche] .boton.peligro{color:var(--rojo)}
 </style>
 </head>
 <body>
@@ -331,7 +342,7 @@ const IDIOMAS = {es:'Español', ca:'Català', en:'English', fr:'Français', de:'
 
 /* ============ TEXTOS ============ */
 const T = {
-es:{partidaN:'Partida n.º {n}',contador:'Contador',toca:'Toca para empezar',jugadores:'Jugadores',jugador:'Jugador',expansiones:'Expansiones',
+es:{buscar:'Buscar carta…',partidaN:'Partida n.º {n}',contador:'Contador',toca:'Toca para empezar',jugadores:'Jugadores',jugador:'Jugador',expansiones:'Expansiones',
  exp:{eur:'Europa',oce:'Oceanía',asia:'Asia',ame:'Américas'},
  expD:{eur:'Cartas bonus de Europa',oce:'Néctar por hábitat y cartas bonus',asia:'Cartas bonus y modo duelo',ame:'Pista de colibríes y cartas bonus'},
  duelo:'Modo duelo (Asia)',dueloD:'Añade los marcadores de duelo; las rondas se anotan a mano',
@@ -349,14 +360,14 @@ es:{partidaN:'Partida n.º {n}',contador:'Contador',toca:'Toca para empezar',jug
  verRes:'Ver resultado',resultado:'Resultado',empate:'Empate a puntos: decide la comida sin usar.',empateComp:' Siguen empatados, así que comparten la victoria.',
  filas:{aves:'Aves',bonus:'Bonus',rondas:'Rondas',huevos:'Huevos',comida:'Comida',bajo:'Bajo aves',nectar:'Néctar',colibri:'Colibríes',duelo:'Duelo',total:'Total',reserva:'Reserva'},
  volver:'Volver',terminar:'Terminar y guardar',guardada:'Guardada ✓',guardadaMsg:'Partida guardada en el archivo',
- confNueva:'¿Empezar una partida nueva? Se borrarán los puntos (se conservan jugadores y expansiones).',
+ confNueva:'¿Empezar una partida nueva? Se borra todo: puntos, jugadores y expansiones (el archivo se conserva).',
  archVacio:'Todavía no hay partidas guardadas.',ver:'Ver',ocultar:'Ocultar',borrar:'Borrar',vaciar:'Vaciar archivo',otraVez:'Toca otra vez para confirmar',cerrar:'Cerrar',ganador:'Ganador',ganadores:'Ganadores',base:'Juego base',
  acceso:'Activa tu contador',clave:'Clave de licencia',activar:'Activar',comprar:'Comprar la clave',probar:'Probar gratis',quedan:'Te quedan {n} partidas de prueba',quedan1:'Te queda 1 partida de prueba',agotada:'Has usado las {n} partidas de prueba.',claveMal:'Clave incorrecta',activada:'¡Clave activada!',clavePie:'La clave te llega en el email de confirmación de compra.',
  tema:'Tema',auto:'Automático',dia:'Modo día',noche:'Modo noche',idioma:'Idioma',
  aviso:'Aviso legal',gira:'Gira el móvil 📱',
  legal:'Contador de puntos no oficial, creado de forma independiente por PenTech. No está afiliado, patrocinado ni aprobado por Stonemaier Games ni por Maldito Games. Wingspan es un juego de Elizabeth Hargrave publicado por Stonemaier Games y editado en España por Maldito Games; los nombres y las marcas pertenecen a sus propietarios. Para jugar necesitas un ejemplar del juego. La clave de licencia da acceso a esta app, no al juego.',
  frases:['¡Que no se escapen los pájaros!','Cada huevo cuenta.','Tranquilo, el halcón no puntúa… o sí.','Si el pájaro canta, suma.','Pío pío, que el marcador sube.','Más vale pájaro en mano que ciento volando.','Cuenta las plumas, no las prisas.']},
-ca:{partidaN:'Partida núm. {n}',contador:'Comptador',toca:'Toca per començar',jugadores:'Jugadors',jugador:'Jugador',expansiones:'Expansions',
+ca:{buscar:'Cercar carta…',partidaN:'Partida núm. {n}',contador:'Comptador',toca:'Toca per començar',jugadores:'Jugadors',jugador:'Jugador',expansiones:'Expansions',
  exp:{eur:'Europa',oce:'Oceania',asia:'Àsia',ame:'Amèriques'},
  expD:{eur:"Cartes bonus d'Europa",oce:'Nèctar per hàbitat i cartes bonus',asia:'Cartes bonus i mode duel',ame:'Pista de colibrís i cartes bonus'},
  duelo:'Mode duel (Àsia)',dueloD:"Afegeix els marcadors de duel; les rondes s'apunten a mà",
@@ -374,14 +385,14 @@ ca:{partidaN:'Partida núm. {n}',contador:'Comptador',toca:'Toca per començar',
  verRes:'Veure resultat',resultado:'Resultat',empate:'Empat a punts: decideix el menjar sense fer servir.',empateComp:' Continuen empatats, així que comparteixen la victòria.',
  filas:{aves:'Ocells',bonus:'Bonus',rondas:'Rondes',huevos:'Ous',comida:'Menjar',bajo:'Sota ocells',nectar:'Nèctar',colibri:'Colibrís',duelo:'Duel',total:'Total',reserva:'Reserva'},
  volver:'Tornar',terminar:'Acabar i desar',guardada:'Desada ✓',guardadaMsg:"Partida desada a l'arxiu",
- confNueva:"Començar una partida nova? S'esborraran els punts (es mantenen jugadors i expansions).",
+ confNueva:"Començar una partida nova? S'esborra tot: punts, jugadors i expansions (l'arxiu es conserva).",
  archVacio:'Encara no hi ha partides desades.',ver:'Veure',ocultar:'Amagar',borrar:'Esborrar',vaciar:"Buidar l'arxiu",otraVez:'Toca un altre cop per confirmar',cerrar:'Tancar',ganador:'Guanyador',ganadores:'Guanyadors',base:'Joc base',
  acceso:'Activa el teu comptador',clave:'Clau de llicència',activar:'Activar',comprar:'Comprar la clau',probar:'Provar gratis',quedan:'Et queden {n} partides de prova',quedan1:"Et queda 1 partida de prova",agotada:'Has fet servir les {n} partides de prova.',claveMal:'Clau incorrecta',activada:'Clau activada!',clavePie:"La clau t'arriba al correu de confirmació de compra.",
  tema:'Tema',auto:'Automàtic',dia:'Mode dia',noche:'Mode nit',idioma:'Idioma',
  aviso:'Avís legal',gira:'Gira el mòbil 📱',
  legal:"Comptador de punts no oficial, creat de manera independent per PenTech. No està afiliat, patrocinat ni aprovat per Stonemaier Games ni per Maldito Games. Wingspan és un joc d'Elizabeth Hargrave publicat per Stonemaier Games i editat a Espanya per Maldito Games; els noms i les marques pertanyen als seus propietaris. Per jugar necessites un exemplar del joc. La clau de llicència dona accés a aquesta app, no al joc.",
  frases:["Que no s'escapin els ocells!",'Cada ou compta.','Tranquil, el falcó no puntua… o sí.',"Si l'ocell canta, suma.",'Piu piu, que el marcador puja.','Més val ocell a la mà que cent volant.','Compta plomes, no presses.']},
-en:{partidaN:'Game #{n}',contador:'Counter',toca:'Tap to start',jugadores:'Players',jugador:'Player',expansiones:'Expansions',
+en:{buscar:'Search card…',partidaN:'Game #{n}',contador:'Counter',toca:'Tap to start',jugadores:'Players',jugador:'Player',expansiones:'Expansions',
  exp:{eur:'Europe',oce:'Oceania',asia:'Asia',ame:'Americas'},
  expD:{eur:'European bonus cards',oce:'Nectar by habitat and bonus cards',asia:'Bonus cards and Duet mode',ame:'Hummingbird track and bonus cards'},
  duelo:'Duet mode (Asia)',dueloD:'Adds duet tokens; rounds are entered by hand',
@@ -399,14 +410,14 @@ en:{partidaN:'Game #{n}',contador:'Counter',toca:'Tap to start',jugadores:'Playe
  verRes:'See result',resultado:'Result',empate:'Tied on points: unused food decides.',empateComp:' Still tied, so they share the victory.',
  filas:{aves:'Birds',bonus:'Bonus',rondas:'Rounds',huevos:'Eggs',comida:'Food',bajo:'Tucked',nectar:'Nectar',colibri:'Hummingbirds',duelo:'Duet',total:'Total',reserva:'Supply'},
  volver:'Back',terminar:'Finish and save',guardada:'Saved ✓',guardadaMsg:'Game saved to the archive',
- confNueva:'Start a new game? Points will be cleared (players and expansions are kept).',
+ confNueva:'Start a new game? Everything is cleared: points, players and expansions (the archive is kept).',
  archVacio:'No saved games yet.',ver:'Show',ocultar:'Hide',borrar:'Delete',vaciar:'Clear archive',otraVez:'Tap again to confirm',cerrar:'Close',ganador:'Winner',ganadores:'Winners',base:'Base game',
  acceso:'Unlock your counter',clave:'Licence key',activar:'Activate',comprar:'Buy the key',probar:'Try for free',quedan:'{n} trial games left',quedan1:'1 trial game left',agotada:'You have used your {n} trial games.',claveMal:'Wrong key',activada:'Key activated!',clavePie:'The key arrives in your purchase confirmation email.',
  tema:'Theme',auto:'Automatic',dia:'Day mode',noche:'Night mode',idioma:'Language',
  aviso:'Legal notice',gira:'Turn your phone 📱',
  legal:'Unofficial score counter, created independently by PenTech. It is not affiliated with, sponsored or endorsed by Stonemaier Games. Wingspan is a game by Elizabeth Hargrave published by Stonemaier Games; names and trademarks belong to their owners. You need a copy of the game to play. The licence key gives access to this app, not to the game.',
  frases:["Don't let the birds fly away!",'Every egg counts.','Relax, the hawk doesn\'t score… or does it?','If the bird sings, it scores.','Tweet tweet, the score goes up.','A bird in the hand is worth two in the bush.','Count feathers, not hurries.']},
-fr:{partidaN:'Partie nº {n}',contador:'Compteur',toca:'Touchez pour commencer',jugadores:'Joueurs',jugador:'Joueur',expansiones:'Extensions',
+fr:{buscar:'Chercher une carte…',partidaN:'Partie nº {n}',contador:'Compteur',toca:'Touchez pour commencer',jugadores:'Joueurs',jugador:'Joueur',expansiones:'Extensions',
  exp:{eur:'Europe',oce:'Océanie',asia:'Asie',ame:'Amériques'},
  expD:{eur:"Cartes Bonus d'Europe",oce:'Nectar par habitat et cartes Bonus',asia:'Cartes Bonus et mode duel',ame:'Piste des colibris et cartes Bonus'},
  duelo:'Mode duel (Asie)',dueloD:'Ajoute les marqueurs de duel ; les manches se notent à la main',
@@ -424,14 +435,14 @@ fr:{partidaN:'Partie nº {n}',contador:'Compteur',toca:'Touchez pour commencer',
  verRes:'Voir le résultat',resultado:'Résultat',empate:'Égalité de points : la nourriture inutilisée départage.',empateComp:' Toujours à égalité : ils partagent la victoire.',
  filas:{aves:'Oiseaux',bonus:'Bonus',rondas:'Manches',huevos:'Œufs',comida:'Nourriture',bajo:'Glissées',nectar:'Nectar',colibri:'Colibris',duelo:'Duel',total:'Total',reserva:'Réserve'},
  volver:'Retour',terminar:'Terminer et enregistrer',guardada:'Enregistrée ✓',guardadaMsg:'Partie enregistrée dans les archives',
- confNueva:'Commencer une nouvelle partie ? Les points seront effacés (joueurs et extensions conservés).',
+ confNueva:'Commencer une nouvelle partie ? Tout est effacé : points, joueurs et extensions (les archives sont conservées).',
  archVacio:'Aucune partie enregistrée pour l’instant.',ver:'Voir',ocultar:'Masquer',borrar:'Supprimer',vaciar:'Vider les archives',otraVez:'Touchez encore pour confirmer',cerrar:'Fermer',ganador:'Gagnant',ganadores:'Gagnants',base:'Jeu de base',
  acceso:'Activez votre compteur',clave:'Clé de licence',activar:'Activer',comprar:'Acheter la clé',probar:'Essayer gratuitement',quedan:'Il vous reste {n} parties d’essai',quedan1:'Il vous reste 1 partie d’essai',agotada:'Vous avez utilisé vos {n} parties d’essai.',claveMal:'Clé incorrecte',activada:'Clé activée !',clavePie:'La clé arrive dans l’e-mail de confirmation d’achat.',
  tema:'Thème',auto:'Automatique',dia:'Mode jour',noche:'Mode nuit',idioma:'Langue',
  aviso:'Mentions légales',gira:'Tournez votre téléphone 📱',
  legal:'Compteur de points non officiel, créé de manière indépendante par PenTech. Il n’est ni affilié, ni sponsorisé, ni approuvé par Stonemaier Games. Wingspan est un jeu d’Elizabeth Hargrave publié par Stonemaier Games ; les noms et marques appartiennent à leurs propriétaires. Il faut un exemplaire du jeu pour jouer. La clé de licence donne accès à cette application, pas au jeu.',
  frases:['Ne laissez pas filer les oiseaux !','Chaque œuf compte.','Du calme, le faucon ne marque pas… ou si.','Si l’oiseau chante, ça compte.','Cui-cui, le score grimpe.','Un tiens vaut mieux que deux tu l’auras.','Comptez les plumes, pas les minutes.']},
-de:{partidaN:'Partie Nr. {n}',contador:'Zähler',toca:'Zum Starten tippen',jugadores:'Spieler',jugador:'Spieler',expansiones:'Erweiterungen',
+de:{buscar:'Karte suchen…',partidaN:'Partie Nr. {n}',contador:'Zähler',toca:'Zum Starten tippen',jugadores:'Spieler',jugador:'Spieler',expansiones:'Erweiterungen',
  exp:{eur:'Europa',oce:'Ozeanien',asia:'Asien',ame:'Amerika'},
  expD:{eur:'Bonuskarten aus Europa',oce:'Nektar je Lebensraum und Bonuskarten',asia:'Bonuskarten und Duellmodus',ame:'Kolibri-Leiste und Bonuskarten'},
  duelo:'Duellmodus (Asien)',dueloD:'Fügt Duellmarker hinzu; Runden werden von Hand eingetragen',
@@ -449,14 +460,14 @@ de:{partidaN:'Partie Nr. {n}',contador:'Zähler',toca:'Zum Starten tippen',jugad
  verRes:'Ergebnis',resultado:'Ergebnis',empate:'Punktgleichstand: ungenutztes Futter entscheidet.',empateComp:' Immer noch gleich: sie teilen sich den Sieg.',
  filas:{aves:'Vögel',bonus:'Bonus',rondas:'Runden',huevos:'Eier',comida:'Futter',bajo:'Darunter',nectar:'Nektar',colibri:'Kolibris',duelo:'Duell',total:'Gesamt',reserva:'Vorrat'},
  volver:'Zurück',terminar:'Beenden und speichern',guardada:'Gespeichert ✓',guardadaMsg:'Spiel im Archiv gespeichert',
- confNueva:'Neues Spiel starten? Die Punkte werden gelöscht (Spieler und Erweiterungen bleiben).',
+ confNueva:'Neues Spiel starten? Alles wird gelöscht: Punkte, Spieler und Erweiterungen (das Archiv bleibt).',
  archVacio:'Noch keine gespeicherten Spiele.',ver:'Zeigen',ocultar:'Ausblenden',borrar:'Löschen',vaciar:'Archiv leeren',otraVez:'Zum Bestätigen erneut tippen',cerrar:'Schließen',ganador:'Sieger',ganadores:'Sieger',base:'Grundspiel',
  acceso:'Zähler freischalten',clave:'Lizenzschlüssel',activar:'Aktivieren',comprar:'Schlüssel kaufen',probar:'Kostenlos testen',quedan:'Noch {n} Testspiele',quedan1:'Noch 1 Testspiel',agotada:'Du hast deine {n} Testspiele verbraucht.',claveMal:'Falscher Schlüssel',activada:'Schlüssel aktiviert!',clavePie:'Den Schlüssel bekommst du in der Kaufbestätigung per E-Mail.',
  tema:'Design',auto:'Automatisch',dia:'Tagmodus',noche:'Nachtmodus',idioma:'Sprache',
  aviso:'Rechtlicher Hinweis',gira:'Drehe dein Handy 📱',
  legal:'Inoffizieller Punktezähler, unabhängig erstellt von PenTech. Nicht verbunden mit, gesponsert oder genehmigt von Stonemaier Games oder Feuerland Spiele. Wingspan (Flügelschlag) ist ein Spiel von Elizabeth Hargrave, veröffentlicht von Stonemaier Games; Namen und Marken gehören ihren Inhabern. Zum Spielen brauchst du ein Exemplar des Spiels. Der Lizenzschlüssel gibt Zugang zu dieser App, nicht zum Spiel.',
  frases:['Lass die Vögel nicht entwischen!','Jedes Ei zählt.','Keine Sorge, der Falke punktet nicht… oder doch.','Wenn der Vogel singt, zählt es.','Piep piep, die Punkte steigen.','Lieber den Spatz in der Hand als die Taube auf dem Dach.','Federn zählen, nicht hetzen.']},
-it:{partidaN:'Partita n. {n}',contador:'Contatore',toca:'Tocca per iniziare',jugadores:'Giocatori',jugador:'Giocatore',expansiones:'Espansioni',
+it:{buscar:'Cerca carta…',partidaN:'Partita n. {n}',contador:'Contatore',toca:'Tocca per iniziare',jugadores:'Giocatori',jugador:'Giocatore',expansiones:'Espansioni',
  exp:{eur:'Europa',oce:'Oceania',asia:'Asia',ame:'Americhe'},
  expD:{eur:'Carte bonus europee',oce:'Nettare per habitat e carte bonus',asia:'Carte bonus e modalità duello',ame:'Tracciato dei colibrì e carte bonus'},
  duelo:'Modalità duello (Asia)',dueloD:'Aggiunge i segnalini duello; i round si segnano a mano',
@@ -474,7 +485,7 @@ it:{partidaN:'Partita n. {n}',contador:'Contatore',toca:'Tocca per iniziare',jug
  verRes:'Vedi risultato',resultado:'Risultato',empate:'Pareggio a punti: decide il cibo non usato.',empateComp:' Ancora pari: condividono la vittoria.',
  filas:{aves:'Uccelli',bonus:'Bonus',rondas:'Round',huevos:'Uova',comida:'Cibo',bajo:'Sotto',nectar:'Nettare',colibri:'Colibrì',duelo:'Duello',total:'Totale',reserva:'Riserva'},
  volver:'Indietro',terminar:'Termina e salva',guardada:'Salvata ✓',guardadaMsg:'Partita salvata in archivio',
- confNueva:'Iniziare una nuova partita? I punti verranno cancellati (giocatori ed espansioni restano).',
+ confNueva:'Iniziare una nuova partita? Si cancella tutto: punti, giocatori ed espansioni (l’archivio resta).',
  archVacio:'Ancora nessuna partita salvata.',ver:'Mostra',ocultar:'Nascondi',borrar:'Elimina',vaciar:'Svuota archivio',otraVez:'Tocca di nuovo per confermare',cerrar:'Chiudi',ganador:'Vincitore',ganadores:'Vincitori',base:'Gioco base',
  acceso:'Attiva il tuo contatore',clave:'Chiave di licenza',activar:'Attiva',comprar:'Acquista la chiave',probar:'Prova gratis',quedan:'Ti restano {n} partite di prova',quedan1:'Ti resta 1 partita di prova',agotada:'Hai usato le tue {n} partite di prova.',claveMal:'Chiave errata',activada:'Chiave attivata!',clavePie:'La chiave arriva nell’e-mail di conferma dell’acquisto.',
  tema:'Tema',auto:'Automatico',dia:'Modalità giorno',noche:'Modalità notte',idioma:'Lingua',
@@ -662,8 +673,8 @@ mq.addEventListener && mq.addEventListener('change',aplicarTema);
 
 /* ============ ESTADO ============ */
 function nuevoJugador(){ return {nombre:'',aves:0,huevos:0,comida:0,bajo:0,reserva:0,rondas:[0,0,0,0],rondasMan:[0,0,0,0],nectar:[0,0,0],colibri:[-3,-3,-3,-3,-3],duelo:0,bonus:[],bonusMan:0}; }
-function nuevoEstado(){ return {cfg:{n:3,exp:{eur:false,oce:false,asia:false,ame:false},lado:'verde',duelo:false},jug:[0,1,2].map(nuevoJugador),activo:0,empezada:false,guardada:false}; }
-function cargar(){ try{ const e=JSON.parse(lsGet(K.estado)); if(e&&e.jug&&e.cfg){ e.jug=e.jug.map(j=>Object.assign(nuevoJugador(),j)); return e; } }catch(e){} return null; }
+function nuevoEstado(){ return {cfg:{n:2,exp:{eur:false,oce:false,asia:false,ame:false},lado:'verde',duelo:false},jug:[0,1].map(nuevoJugador),activo:0,empezada:false,guardada:false}; }
+function cargar(){ try{ const e=JSON.parse(lsGet(K.estado)); if(e&&e.jug&&e.cfg){ e.jug=e.jug.map(j=>Object.assign(nuevoJugador(),j)); while(e.jug.length<2) e.jug.push(nuevoJugador()); if(e.cfg.n<2) e.cfg.n=2; return e; } }catch(e){} return null; }
 let E = cargar() || nuevoEstado();
 function guardar(){ lsSet(K.estado, JSON.stringify(E)); }
 function nombre(i){ return (E.jug[i].nombre||'').trim() || (t('jugador')+' '+(i+1)); }
@@ -762,7 +773,7 @@ function pintarAjustes(){
   $('#tabs').innerHTML='';
   const c=E.cfg;
   $('#main').innerHTML=`<section class="panel" data-c="humedal"><h2><span class="trazo">${t('jugadores')}</span></h2>
-    <div class="seg" id="segN">${[1,2,3,4,5,6,7].map(n=>`<button data-n="${n}" class="${c.n===n?'activo':''}">${n}</button>`).join('')}</div>
+    <div class="seg" id="segN">${[2,3,4,5,6,7].map(n=>`<button data-n="${n}" class="${c.n===n?'activo':''}">${n}</button>`).join('')}</div>
     <div class="nombres">${E.jug.map((j,i)=>`<input type="text" maxlength="18" data-nom="${i}" placeholder="${t('jugador')} ${i+1}" value="${esc(j.nombre)}">`).join('')}</div>
     ${c.n>5?`<p class="nota">${t('bandada')}</p>`:''}
   </section>
@@ -817,8 +828,7 @@ function pintarJuego(){
     else ctrl=`<div class="fila"><label>${t('cantidad')}</label>${paso(`bonus.${k}.v`,bn.v||0)}</div>`;
     h+=`<div class="bonus"><div class="tit"><span>${esc(nomCarta(c))}</span><span class="pts">${puntosCarta(j,bn)}</span><button data-quita="${k}" aria-label="${t('quitar')}">×</button></div><div class="desc">${esc(descCarta(c))}${c.t==='auto'?'':tramosTxt(c)}</div>${c.e!=='base'&&LANG!=='en'?`<div class="orig">${esc(c.nen)}</div>`:''}${ctrl}</div>`;
   });
-  const disp=B.filter(c=>c.e==='base'||E.cfg.exp[c.e]).sort((x,y)=>nomCarta(x).localeCompare(nomCarta(y),LANG));
-  h+=`<div class="anadir"><select id="selBonus" aria-label="${t('anadirBonus')}"><option value="">${t('anadirBonus')}</option>${disp.map(c=>`<option value="${c.id}">${esc(nomCarta(c))}${c.e!=='base'?' · '+t('exp')[c.e]:''}</option>`).join('')}</select><button class="boton" id="btnAddBonus">＋</button></div>`;
+  h+=`<button class="abreBonus" id="btnAbreBonus"><span>＋</span>${t('anadirBonus')}</button>`;
   h+=`<div class="fila"><label>${t('otrosBonus')}<small>${t('otrosBonusS')}</small></label>${paso('bonusMan',j.bonusMan||0)}</div></section>`;
   if(E.cfg.exp.oce){
     h+=`<section class="panel" data-c="rosa"><h2><span class="trazo">${t('nectar')}</span> <em>${d.nectar}</em></h2><p class="nota">${t('nectarS')}</p><div class="grid3">`;
@@ -889,6 +899,18 @@ function abrirArchivo(){
   h+=`<div class="barra">${H.length?`<button class="boton peligro" id="btnVaciar">${t('vaciar')}</button>`:''}<button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
   confirmaVaciar=false; abrirHoja(h);
 }
+function abrirSelBonus(){
+  const grupos=['base','eur','oce','asia','ame'].filter(e=>e==='base'||E.cfg.exp[e]);
+  let h=`<h2>${t('bonus')}</h2><input type="text" id="buscaBonus" placeholder="${t('buscar')}" autocomplete="off" spellcheck="false"><div id="listaBonus">`;
+  grupos.forEach(e=>{
+    const cs=B.filter(c=>c.e===e).sort((x,y)=>nomCarta(x).localeCompare(nomCarta(y),LANG));
+    h+=`<div class="grupoB"><div class="grupoT">${e==='base'?t('base'):t('exp')[e]}</div>`;
+    cs.forEach(c=>{ h+=`<button class="opcB" data-elige="${c.id}" data-busca="${esc((nomCarta(c)+' '+c.nen).toLowerCase())}"><b>${esc(nomCarta(c))}</b>${e!=='base'?`<i>${t('exp')[e]}</i>`:''}</button>`; });
+    h+=`</div>`;
+  });
+  h+=`</div><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
+  abrirHoja(h);
+}
 function abrirLegal(){ abrirHoja(`<h2><span class="trazo">${t('aviso')}</span></h2><p>${t('legal')}</p><p class="nota">Wingspan · ${t('contador')} · ${VERSION} · PenTech</p><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`); }
 
 /* ============ MENÚS ============ */
@@ -941,7 +963,8 @@ function empezar(){
 }
 function nuevaPartida(){
   if(!confirm(t('confNueva'))) return;
-  E.jug=E.jug.map(j=>Object.assign(nuevoJugador(),{nombre:j.nombre}));
+  E.cfg={n:2,exp:{eur:false,oce:false,asia:false,ame:false},lado:'verde',duelo:false};
+  E.jug=[0,1].map(nuevoJugador);
   E.activo=0; E.empezada=false; E.guardada=false; guardar(); cerrarHoja();
   pantalla = licOK()||pruebasQuedan()>0 ? 'ajustes' : 'acceso'; pintar(); window.scrollTo(0,0);
 }
@@ -971,12 +994,13 @@ document.addEventListener('click',e=>{
   if(ds.lang){ LANG=ds.lang; lsSet(K.idioma,LANG); cerrarMenus(); pintar(); if(!$('#velo').classList.contains('oculto')) cerrarHoja(); return; }
   if(ds.tema){ TEMA=ds.tema; lsSet(K.tema,TEMA); aplicarTema(); cerrarMenus(); return; }
   if(ds.ver!==undefined){ const d=$('#det'+ds.ver); d.classList.toggle('oculto'); b.textContent=d.classList.contains('oculto')?t('ver'):t('ocultar'); return; }
+  if(ds.elige){ E.jug[E.activo].bonus.push({id:ds.elige,v:0,v2:0}); E.guardada=false; guardar(); cerrarHoja(); pintar(); setTimeout(()=>{ const bs=document.querySelectorAll('.bonus'); if(bs.length) bs[bs.length-1].scrollIntoView({block:'center',behavior:'smooth'}); },50); return; }
   if(ds.borra!==undefined){ let H=[]; try{H=JSON.parse(lsGet(K.hist))||[];}catch(_){} H.splice(+ds.borra,1); lsSet(K.hist,JSON.stringify(H)); abrirArchivo(); return; }
   switch(b.id){
     case 'btnIdioma': abrirMenuIdioma(); break;
     case 'btnTema': abrirMenuTema(); break;
     case 'btnAjustes': cerrarHoja(); pantalla=pantalla==='ajustes'&&E.empezada?'juego':'ajustes'; pintar(); window.scrollTo(0,0); break;
-    case 'btnAddBonus': { const id=$('#selBonus').value; if(!id) return; E.jug[E.activo].bonus.push({id,v:0,v2:0}); E.guardada=false; guardar(); pintar(); break; }
+    case 'btnAbreBonus': abrirSelBonus(); break;
     case 'btnEmpezar': empezar(); break;
     case 'btnFin': abrirResultado(true); break;
     case 'btnCerrar': cerrarHoja(); break;
@@ -996,7 +1020,8 @@ document.addEventListener('change',e=>{
   if(x.dataset.exp){ E.cfg.exp[x.dataset.exp]=x.checked; if(x.dataset.exp==='asia'&&!x.checked) E.cfg.duelo=false; E.guardada=false; guardar(); pintar(); return; }
   if(x.id==='chkDuelo'){ E.cfg.duelo=x.checked; guardar(); pintar(); return; }
 });
-document.addEventListener('input',e=>{ const x=e.target; if(x.dataset.nom!==undefined){ E.jug[+x.dataset.nom].nombre=x.value; guardar(); } });
+document.addEventListener('input',e=>{ const x=e.target;
+  if(x.id==='buscaBonus'){ const q=x.value.trim().toLowerCase(); document.querySelectorAll('.opcB').forEach(o=>o.classList.toggle('oculto',!!q&&!o.dataset.busca.includes(q))); document.querySelectorAll('.grupoB').forEach(g=>g.classList.toggle('oculto',!g.querySelector('.opcB:not(.oculto)'))); return; } if(x.dataset.nom!==undefined){ E.jug[+x.dataset.nom].nombre=x.value; guardar(); } });
 document.addEventListener('focusin',e=>{ if(e.target.type==='number') setTimeout(()=>{ try{ e.target.select(); }catch(_){} },0); });
 document.addEventListener('contextmenu',e=>{ if(!e.target.closest('.hoja')&&!e.target.closest('input')) e.preventDefault(); });
 $('#velo').addEventListener('click',e=>{ if(e.target.id==='velo') cerrarHoja(); });
