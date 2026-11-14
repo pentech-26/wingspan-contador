@@ -271,6 +271,12 @@
   .frase{font-size:1.25rem;margin:4px 0 14px}
   #gira{font-family:var(--versal)}
   .redondo{font-size:1.3rem}
+  header{padding-top:calc(22px + env(safe-area-inset-top))}
+  .diario{font-size:1.15rem;margin-top:6px}
+  .frase{font-size:1.65rem;margin:6px 0 16px;line-height:1.2}
+  .total{border:2.5px solid var(--cubo,var(--linea));box-shadow:0 0 0 4px color-mix(in srgb,var(--cubo,transparent) 22%,transparent),0 8px 28px rgba(40,60,55,.18);transition:border-color .25s,box-shadow .25s}
+  .total>div{gap:10px}
+  .total .cubo{width:22px;height:22px}
   .redondo svg{width:24px;height:24px}
   .cabfila h1{display:flex;flex-direction:column;align-items:center;line-height:1;padding-left:0;letter-spacing:0}
   .cabfila h1 .logo{letter-spacing:.3em;padding-left:.3em}
@@ -298,7 +304,7 @@
 <main id="main"></main>
 
 <div class="total oculto" id="barraTotal">
-  <div><div class="nom" id="nombreActivo"></div><strong id="totalActivo">0</strong></div>
+  <div><i class="cubo" id="cuboActivo"></i><div class="nom" id="nombreActivo"></div><strong id="totalActivo">0</strong></div>
   <button class="boton oro" id="btnFin"></button>
 </div>
 
@@ -777,6 +783,7 @@ function pintarJuego(){
   const D=desglose(),a=E.activo,j=E.jug[a],d=D[a];
   $('#tabs').innerHTML=E.jug.map((x,i)=>`<button class="tab ${i===a?'activo':''}" data-tab="${i}" style="--cubo:${CUBOS[i%CUBOS.length]}"><i class="cubo"></i><span>${esc(nombre(i))}<small>${D[i].total} ${t('pts')}</small></span></button>`).join('');
   $('#nombreActivo').textContent=nombre(a);
+  $('#barraTotal').style.setProperty('--cubo',CUBOS[a%CUBOS.length]);
   { const el=$('#totalActivo'); if(el.textContent!==String(d.total)&&el.textContent!==''){ el.classList.remove('late'); void el.offsetWidth; el.classList.add('late'); } el.textContent=d.total; }
   const fr=t('frases');
   let nH=0; try{ nH=(JSON.parse(lsGet(K.hist))||[]).length; }catch(_){}
