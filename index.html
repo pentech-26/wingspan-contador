@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#f3efe4">
+<meta name="theme-color" content="#e9e1d2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Wingspan">
@@ -282,6 +282,16 @@
   .cabfila h1 .logo{letter-spacing:.3em;padding-left:.3em}
   .cabfila h1 .logoSub{font-family:Dancing,cursive;font-weight:600;font-size:1.05rem;letter-spacing:0;color:var(--marron);margin-top:-1px;transform:rotate(-2deg)}
   .bonus .orig{font-size:.84rem;color:var(--gris);font-style:italic;margin:-2px 0 4px;opacity:.85}
+
+  /* ===== Contraste fondo / hojas (caché v8) ===== */
+  :root{--fondo:#e9e1d2;--hoja:#fffdf8;--tarjeta:rgba(255,252,246,.94);
+    --w1:rgba(120,178,218,.38);--w2:rgba(135,192,168,.34);--w3:rgba(220,185,125,.26);--w4:rgba(190,155,208,.22);
+    --borde-hoja:rgba(120,95,60,.22);--sombra-hoja:0 1px 2px rgba(70,50,25,.14),0 12px 28px rgba(70,50,25,.17)}
+  html[data-tema=noche]{--fondo:#0b1117;--hoja:#273644;--tarjeta:rgba(39,54,68,.95);--w1:rgba(45,85,125,.30);--w2:rgba(30,90,78,.22);--w3:rgba(90,70,45,.16);--w4:rgba(80,60,115,.18);--celda:#17212b;
+    --borde-hoja:rgba(255,255,255,.10);--sombra-hoja:0 2px 4px rgba(0,0,0,.5),0 14px 32px rgba(0,0,0,.48)}
+  .panel{border:1px solid var(--borde-hoja);box-shadow:var(--sombra-hoja)}
+  .tab,.redondo{border-color:var(--borde-hoja)}
+  .total{background:var(--hoja)}
 </style>
 </head>
 <body>
@@ -645,7 +655,7 @@ const mq = window.matchMedia('(prefers-color-scheme: dark)');
 function aplicarTema(){
   const noche = TEMA==='noche' || (TEMA==='auto' && mq.matches);
   document.documentElement.dataset.tema = noche?'noche':'dia';
-  document.querySelector('meta[name=theme-color]').content = noche?'#151f28':'#f3efe4';
+  document.querySelector('meta[name=theme-color]').content = noche?'#0b1117':'#e9e1d2';
   $('#btnTema').textContent = TEMA==='auto'?'🌗':TEMA==='dia'?'☀️':'🌙';
 }
 mq.addEventListener && mq.addEventListener('change',aplicarTema);
