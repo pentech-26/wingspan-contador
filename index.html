@@ -13,10 +13,7 @@
 <title>Wingspan · Contador</title>
 <style>
   @font-face{font-family:Antonio;font-weight:200;src:url(fonts/antonio-latin-200-normal.woff2) format('woff2');font-display:swap}
-  @font-face{font-family:Antonio;font-weight:300;src:url(fonts/antonio-latin-300-normal.woff2) format('woff2');font-display:swap}
   @font-face{font-family:Antonio;font-weight:500;src:url(fonts/antonio-latin-500-normal.woff2) format('woff2');font-display:swap}
-  @font-face{font-family:Jost;font-weight:400;src:url(fonts/jost-latin-400-normal.woff2) format('woff2');font-display:swap}
-  @font-face{font-family:Jost;font-weight:500;src:url(fonts/jost-latin-500-normal.woff2) format('woff2');font-display:swap}
   @font-face{font-family:Jost;font-weight:600;src:url(fonts/jost-latin-600-normal.woff2) format('woff2');font-display:swap}
   @font-face{font-family:Dancing;font-weight:600;src:url(fonts/dancing-script-latin-600-normal.woff2) format('woff2');font-display:swap}
 
@@ -208,6 +205,77 @@
   .aviso{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--tinta);color:var(--fondo);padding:10px 16px;border-radius:999px;font-size:.9rem;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.3)}
   #gira{position:fixed;inset:0;z-index:99;background:var(--fondo);color:var(--tinta);display:none;align-items:center;justify-content:center;font-family:Antonio,sans-serif;font-size:1.5rem;letter-spacing:.1em;text-align:center;padding:20px}
   @media (orientation:landscape) and (max-height:500px){#gira{display:flex}}
+
+  /* ===== Cuaderno de campo ===== */
+  @font-face{font-family:Lora;font-weight:400;src:url(fonts/lora-latin-400-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Lora;font-weight:400;font-style:italic;src:url(fonts/lora-latin-400-italic.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Lora;font-weight:500;src:url(fonts/lora-latin-500-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:Lora;font-weight:600;src:url(fonts/lora-latin-600-normal.woff2) format('woff2');font-display:swap}
+  @font-face{font-family:'Cormorant SC';font-weight:700;src:url(fonts/cormorant-sc-latin-700-normal.woff2) format('woff2');font-display:swap}
+  :root{--tinta:#2e2a24;--gris:#5e5145;--hoja:#fbf8f0;--regla:rgba(70,110,150,.11);--margen:rgba(190,95,75,.38);--celda:#fffdf8;--celda-borde:#a08f78;--signo:#2e2a24;
+    --serif:Lora,Georgia,"Times New Roman",serif;--versal:'Cormorant SC',Lora,Georgia,serif}
+  html[data-tema=noche]{--tinta:#efe8d8;--gris:#cfc3b1;--hoja:#1d2731;--regla:rgba(255,255,255,.055);--margen:rgba(230,130,110,.30);--celda:#131b23;--celda-borde:#6f8291;--signo:#f3ecdd}
+  html,body{font-family:var(--serif);font-size:16px}
+  .num,input[type=number],select,.pts,.panel h2 em,.total strong,td{font-variant-numeric:lining-nums tabular-nums}
+
+  .panel{border-radius:5px;padding:16px 16px 14px 36px;position:relative;
+    background:
+      linear-gradient(90deg,transparent 23px,var(--margen) 23px,var(--margen) 24.5px,transparent 24.5px),
+      repeating-linear-gradient(180deg,transparent 0 29px,var(--regla) 29px 30px),
+      var(--hoja);
+    box-shadow:0 1px 2px rgba(60,50,40,.10),0 10px 24px rgba(60,50,40,.08);border:1px solid var(--linea)}
+  .panel::after{content:'';position:absolute;top:-10px;right:22px;width:78px;height:21px;background:var(--lav);opacity:.9;transform:rotate(4deg);
+    clip-path:polygon(0 12%,5% 0,12% 8%,22% 0,95% 4%,100% 0,97% 30%,100% 55%,97% 78%,100% 100%,90% 94%,10% 100%,3% 92%,0 70%,3% 48%,0 28%)}
+  .panel:nth-of-type(even)::after{right:auto;left:30px;transform:rotate(-3deg);width:64px}
+  .panel h2{font-family:var(--versal);font-weight:700;font-size:1.4rem;letter-spacing:.03em;text-transform:none;margin:0 0 10px}
+  .panel h2 em{font-family:var(--serif);font-weight:600;font-size:1.55rem}
+  .fila{padding:9px 0}
+  .fila label{font-size:1.03rem;line-height:1.3}
+  .fila small{font-size:.9rem;color:var(--gris);margin-top:2px}
+  .nota{font-size:.92rem;color:var(--gris);font-style:italic;line-height:1.45;margin:2px 0 10px}
+  input[type=number]{font-family:var(--serif);font-weight:600;font-size:1.5rem;width:62px;height:48px;border-radius:6px;background:var(--celda);border:1.5px solid var(--celda-borde);color:var(--tinta)}
+  select,input[type=text]{font-family:var(--serif);border-radius:6px;background:var(--celda);border:1.5px solid var(--celda-borde);height:46px;font-size:1.02rem}
+  .ctrl{gap:7px}
+  .ctrl button{width:42px;height:50px;color:var(--signo);font-family:Jost,system-ui,sans-serif;font-size:1.65rem;font-weight:600;padding-top:3px}
+  .grid3 label,.grid4 label{font-size:.9rem;color:var(--gris)}
+  .grid3 b,.grid4 b{font-family:var(--serif);font-weight:600;font-size:1.05rem}
+  .grid4 input,.grid3 input{width:100%}
+  .colis{grid-template-columns:repeat(3,1fr);gap:12px 10px}
+  .colis label{flex-direction:row;justify-content:center;gap:5px;font-size:.88rem;color:var(--gris);overflow:visible;white-space:nowrap}
+  .colis select{font-family:var(--serif);font-weight:600;font-size:1.25rem;height:46px}
+  .bonus{background:var(--celda);border-radius:6px;border:1px solid var(--linea)}
+  .bonus .tit{font-family:var(--serif);font-weight:600;font-size:1.02rem}
+  .bonus .desc{font-size:.9rem;color:var(--gris);line-height:1.4}
+  .pts{font-family:var(--serif);font-weight:600;font-size:1.3rem}
+  .tab{font-family:var(--serif);font-size:.98rem}
+  .tab small{font-size:.84rem;color:var(--gris)}
+  .boton{font-family:var(--versal);font-weight:700;font-size:1.2rem;letter-spacing:.04em;text-transform:none;border-radius:5px;padding:10px 14px}
+  .seg button{font-family:var(--versal);font-weight:700;font-size:1.2rem;letter-spacing:.02em}
+  .seg button small{font-family:var(--serif);font-size:.84rem;color:var(--gris)}
+  .seg button.activo small{color:var(--tinta)}
+  .chk{font-size:1.03rem}
+  .chk small{font-size:.88rem;color:var(--gris)}
+  .total strong{font-family:var(--serif);font-weight:600;font-size:2.2rem}
+  .total .nom{font-size:1.3rem}
+  .hoja h2{font-family:var(--versal);font-weight:700;font-size:1.9rem;letter-spacing:.05em;text-transform:none}
+  table{font-size:.98rem}
+  th{font-family:var(--serif);font-weight:600}
+  .podio li{font-size:1.02rem}
+  .podio li span:last-child{font-family:var(--serif);font-weight:600;font-size:1.15rem}
+  .ficha .cab2{font-size:.9rem}
+  .menu button{font-family:var(--serif);font-size:1rem}
+  .pie button{font-size:.88rem}
+  .aviso{font-family:var(--serif)}
+  .diario{display:flex;align-items:center;gap:10px;justify-content:center;font-style:italic;color:var(--gris);font-size:.95rem;margin:2px 4px 0}
+  .diario::before,.diario::after{content:'';flex:1;height:1px;background:var(--celda-borde);opacity:.45}
+  .frase{font-size:1.25rem;margin:4px 0 14px}
+  #gira{font-family:var(--versal)}
+  .redondo{font-size:1.3rem}
+  .redondo svg{width:24px;height:24px}
+  .cabfila h1{display:flex;flex-direction:column;align-items:center;line-height:1;padding-left:0;letter-spacing:0}
+  .cabfila h1 .logo{letter-spacing:.3em;padding-left:.3em}
+  .cabfila h1 .logoSub{font-family:Dancing,cursive;font-weight:600;font-size:1.05rem;letter-spacing:0;color:var(--marron);margin-top:-1px;transform:rotate(-2deg)}
+  .bonus .orig{font-size:.84rem;color:var(--gris);font-style:italic;margin:-2px 0 4px;opacity:.85}
 </style>
 </head>
 <body>
@@ -220,9 +288,9 @@
 <header id="cab" class="oculto">
   <div class="cabfila">
     <div class="conMenu"><button class="redondo" id="btnIdioma" aria-label="Idioma">🌐</button><div class="menu izq oculto" id="menuIdioma"></div></div>
-    <h1>WINGSPAN</h1>
+    <h1><span class="logo">WINGSPAN</span><span class="logoSub" id="cabSub"></span></h1>
     <div class="conMenu"><button class="redondo" id="btnTema" aria-label="Tema"></button><div class="menu der oculto" id="menuTema"></div></div>
-    <button class="redondo" id="btnAjustes" aria-label="Partida">⚙︎</button>
+    <button class="redondo" id="btnAjustes" aria-label="Partida"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
   </div>
   <div class="tabs" id="tabs"></div>
 </header>
@@ -247,7 +315,7 @@ const IDIOMAS = {es:'Español', ca:'Català', en:'English', fr:'Français', de:'
 
 /* ============ TEXTOS ============ */
 const T = {
-es:{contador:'Contador',toca:'Toca para empezar',jugadores:'Jugadores',jugador:'Jugador',expansiones:'Expansiones',
+es:{partidaN:'Partida n.º {n}',contador:'Contador',toca:'Toca para empezar',jugadores:'Jugadores',jugador:'Jugador',expansiones:'Expansiones',
  exp:{eur:'Europa',oce:'Oceanía',asia:'Asia',ame:'Américas'},
  expD:{eur:'Cartas bonus de Europa',oce:'Néctar por hábitat y cartas bonus',asia:'Cartas bonus y modo duelo',ame:'Pista de colibríes y cartas bonus'},
  duelo:'Modo duelo (Asia)',dueloD:'Añade los marcadores de duelo; las rondas se anotan a mano',
@@ -272,7 +340,7 @@ es:{contador:'Contador',toca:'Toca para empezar',jugadores:'Jugadores',jugador:'
  aviso:'Aviso legal',gira:'Gira el móvil 📱',
  legal:'Contador de puntos no oficial, creado de forma independiente por PenTech. No está afiliado, patrocinado ni aprobado por Stonemaier Games ni por Maldito Games. Wingspan es un juego de Elizabeth Hargrave publicado por Stonemaier Games y editado en España por Maldito Games; los nombres y las marcas pertenecen a sus propietarios. Para jugar necesitas un ejemplar del juego. La clave de licencia da acceso a esta app, no al juego.',
  frases:['¡Que no se escapen los pájaros!','Cada huevo cuenta.','Tranquilo, el halcón no puntúa… o sí.','Si el pájaro canta, suma.','Pío pío, que el marcador sube.','Más vale pájaro en mano que ciento volando.','Cuenta las plumas, no las prisas.']},
-ca:{contador:'Comptador',toca:'Toca per començar',jugadores:'Jugadors',jugador:'Jugador',expansiones:'Expansions',
+ca:{partidaN:'Partida núm. {n}',contador:'Comptador',toca:'Toca per començar',jugadores:'Jugadors',jugador:'Jugador',expansiones:'Expansions',
  exp:{eur:'Europa',oce:'Oceania',asia:'Àsia',ame:'Amèriques'},
  expD:{eur:"Cartes bonus d'Europa",oce:'Nèctar per hàbitat i cartes bonus',asia:'Cartes bonus i mode duel',ame:'Pista de colibrís i cartes bonus'},
  duelo:'Mode duel (Àsia)',dueloD:"Afegeix els marcadors de duel; les rondes s'apunten a mà",
@@ -297,7 +365,7 @@ ca:{contador:'Comptador',toca:'Toca per començar',jugadores:'Jugadors',jugador:
  aviso:'Avís legal',gira:'Gira el mòbil 📱',
  legal:"Comptador de punts no oficial, creat de manera independent per PenTech. No està afiliat, patrocinat ni aprovat per Stonemaier Games ni per Maldito Games. Wingspan és un joc d'Elizabeth Hargrave publicat per Stonemaier Games i editat a Espanya per Maldito Games; els noms i les marques pertanyen als seus propietaris. Per jugar necessites un exemplar del joc. La clau de llicència dona accés a aquesta app, no al joc.",
  frases:["Que no s'escapin els ocells!",'Cada ou compta.','Tranquil, el falcó no puntua… o sí.',"Si l'ocell canta, suma.",'Piu piu, que el marcador puja.','Més val ocell a la mà que cent volant.','Compta plomes, no presses.']},
-en:{contador:'Counter',toca:'Tap to start',jugadores:'Players',jugador:'Player',expansiones:'Expansions',
+en:{partidaN:'Game #{n}',contador:'Counter',toca:'Tap to start',jugadores:'Players',jugador:'Player',expansiones:'Expansions',
  exp:{eur:'Europe',oce:'Oceania',asia:'Asia',ame:'Americas'},
  expD:{eur:'European bonus cards',oce:'Nectar by habitat and bonus cards',asia:'Bonus cards and Duet mode',ame:'Hummingbird track and bonus cards'},
  duelo:'Duet mode (Asia)',dueloD:'Adds duet tokens; rounds are entered by hand',
@@ -322,7 +390,7 @@ en:{contador:'Counter',toca:'Tap to start',jugadores:'Players',jugador:'Player',
  aviso:'Legal notice',gira:'Turn your phone 📱',
  legal:'Unofficial score counter, created independently by PenTech. It is not affiliated with, sponsored or endorsed by Stonemaier Games. Wingspan is a game by Elizabeth Hargrave published by Stonemaier Games; names and trademarks belong to their owners. You need a copy of the game to play. The licence key gives access to this app, not to the game.',
  frases:["Don't let the birds fly away!",'Every egg counts.','Relax, the hawk doesn\'t score… or does it?','If the bird sings, it scores.','Tweet tweet, the score goes up.','A bird in the hand is worth two in the bush.','Count feathers, not hurries.']},
-fr:{contador:'Compteur',toca:'Touchez pour commencer',jugadores:'Joueurs',jugador:'Joueur',expansiones:'Extensions',
+fr:{partidaN:'Partie nº {n}',contador:'Compteur',toca:'Touchez pour commencer',jugadores:'Joueurs',jugador:'Joueur',expansiones:'Extensions',
  exp:{eur:'Europe',oce:'Océanie',asia:'Asie',ame:'Amériques'},
  expD:{eur:"Cartes Bonus d'Europe",oce:'Nectar par habitat et cartes Bonus',asia:'Cartes Bonus et mode duel',ame:'Piste des colibris et cartes Bonus'},
  duelo:'Mode duel (Asie)',dueloD:'Ajoute les marqueurs de duel ; les manches se notent à la main',
@@ -347,7 +415,7 @@ fr:{contador:'Compteur',toca:'Touchez pour commencer',jugadores:'Joueurs',jugado
  aviso:'Mentions légales',gira:'Tournez votre téléphone 📱',
  legal:'Compteur de points non officiel, créé de manière indépendante par PenTech. Il n’est ni affilié, ni sponsorisé, ni approuvé par Stonemaier Games. Wingspan est un jeu d’Elizabeth Hargrave publié par Stonemaier Games ; les noms et marques appartiennent à leurs propriétaires. Il faut un exemplaire du jeu pour jouer. La clé de licence donne accès à cette application, pas au jeu.',
  frases:['Ne laissez pas filer les oiseaux !','Chaque œuf compte.','Du calme, le faucon ne marque pas… ou si.','Si l’oiseau chante, ça compte.','Cui-cui, le score grimpe.','Un tiens vaut mieux que deux tu l’auras.','Comptez les plumes, pas les minutes.']},
-de:{contador:'Zähler',toca:'Zum Starten tippen',jugadores:'Spieler',jugador:'Spieler',expansiones:'Erweiterungen',
+de:{partidaN:'Partie Nr. {n}',contador:'Zähler',toca:'Zum Starten tippen',jugadores:'Spieler',jugador:'Spieler',expansiones:'Erweiterungen',
  exp:{eur:'Europa',oce:'Ozeanien',asia:'Asien',ame:'Amerika'},
  expD:{eur:'Bonuskarten aus Europa',oce:'Nektar je Lebensraum und Bonuskarten',asia:'Bonuskarten und Duellmodus',ame:'Kolibri-Leiste und Bonuskarten'},
  duelo:'Duellmodus (Asien)',dueloD:'Fügt Duellmarker hinzu; Runden werden von Hand eingetragen',
@@ -372,7 +440,7 @@ de:{contador:'Zähler',toca:'Zum Starten tippen',jugadores:'Spieler',jugador:'Sp
  aviso:'Rechtlicher Hinweis',gira:'Drehe dein Handy 📱',
  legal:'Inoffizieller Punktezähler, unabhängig erstellt von PenTech. Nicht verbunden mit, gesponsert oder genehmigt von Stonemaier Games oder Feuerland Spiele. Wingspan (Flügelschlag) ist ein Spiel von Elizabeth Hargrave, veröffentlicht von Stonemaier Games; Namen und Marken gehören ihren Inhabern. Zum Spielen brauchst du ein Exemplar des Spiels. Der Lizenzschlüssel gibt Zugang zu dieser App, nicht zum Spiel.',
  frases:['Lass die Vögel nicht entwischen!','Jedes Ei zählt.','Keine Sorge, der Falke punktet nicht… oder doch.','Wenn der Vogel singt, zählt es.','Piep piep, die Punkte steigen.','Lieber den Spatz in der Hand als die Taube auf dem Dach.','Federn zählen, nicht hetzen.']},
-it:{contador:'Contatore',toca:'Tocca per iniziare',jugadores:'Giocatori',jugador:'Giocatore',expansiones:'Espansioni',
+it:{partidaN:'Partita n. {n}',contador:'Contatore',toca:'Tocca per iniziare',jugadores:'Giocatori',jugador:'Giocatore',expansiones:'Espansioni',
  exp:{eur:'Europa',oce:'Oceania',asia:'Asia',ame:'Americhe'},
  expD:{eur:'Carte bonus europee',oce:'Nettare per habitat e carte bonus',asia:'Carte bonus e modalità duello',ame:'Tracciato dei colibrì e carte bonus'},
  duelo:'Modalità duello (Asia)',dueloD:'Aggiunge i segnalini duello; i round si segnano a mano',
@@ -464,6 +532,65 @@ b('winter','asia','tramos',{tr:[[4,4],[7,7]],usa:'reserva'},'Winter Feeder','Win
 b('ecolodge','ame','auto',{f:j=>{const d=Math.max(...j.colibri)-Math.min(...j.colibri);return d<=2?6:d===3?3:0;}},'Ecolodge Owner','Ecolodge Owner',L('Diferencia entre tu ficha más alta y la más baja: 0–2→6, 3→3, 4+→0','Diferència entre la teva fitxa més alta i la més baixa: 0–2→6, 3→3, 4+→0','Difference between your highest and lowest token: 0–2→6, 3→3, 4+→0','Écart entre votre jeton le plus haut et le plus bas : 0–2→6, 3→3, 4+→0','Unterschied zwischen höchstem und niedrigstem Marker: 0–2→6, 3→3, 4+→0','Differenza tra il segnalino più alto e il più basso: 0–2→6, 3→3, 4+→0'));
 b('hgardener','ame','auto',{f:j=>2*j.colibri.filter(v=>v>=4).length},'Hummingbird Gardener','Hummingbird Gardener',L('Fichas de colibrí que valen 4 o más: 2 cada una','Fitxes de colibrí que valen 4 o més: 2 cadascuna','Hummingbird tokens worth at least 4: 2 each','Jetons colibri valant au moins 4 : 2 chacun','Kolibri-Marker mit mindestens 4: je 2','Segnalini colibrì che valgono almeno 4: 2 ciascuno'));
 b('hcounter','ame','por',{p:1},'Hummingbird Counter','Hummingbird Counter',L('Casillas con colibrí alcanzadas en tu pista','Caselles amb colibrí assolides a la teva pista','Hummingbird spaces reached on your track','Cases colibri atteintes sur votre piste','Erreichte Kolibri-Felder auf deiner Leiste','Caselle colibrì raggiunte sul tuo tracciato'));
+// Nombres de las cartas bonus por idioma [es, ca, fr, de, it]. Base ES: edición española. Resto: traducción propia (provisional).
+const NOMBRES = {
+ aficionado:['Aficionado de jardín','Aficionat de jardí','Ornithologue amateur','Gartenvogelfreund','Birdwatcher da giardino'],
+ anatomista:['Anatomista','Anatomista','Anatomiste','Anatom','Anatomista'],
+ semillas:['Aves que comen semillas','Menjadora d’ocells','Mangeoire','Futterhaus','Mangiatoia'],
+ cartografo:['Cartógrafo','Cartògraf','Cartographe','Kartograf','Cartografo'],
+ cajasnido:['Constructor de cajas nido','Constructor de caixes niu','Constructeur de nichoirs','Nistkastenbauer','Costruttore di nidi artificiali'],
+ cercados:['Constructor de cercados','Constructor de tancats','Constructeur d’enclos','Gehegebauer','Costruttore di recinti'],
+ plataformas:['Constructor de plataformas','Constructor de plataformes','Constructeur de plateformes','Plattformbauer','Costruttore di piattaforme'],
+ jardinero:['Jardinero silvestre','Jardiner silvestre','Jardinier naturaliste','Naturgärtner','Giardiniere naturalista'],
+ contador:['Contador de aves','Comptador d’ocells','Recenseur d’oiseaux','Vogelzähler','Contatore di uccelli'],
+ criador:['Criador de aves','Criador d’ocells','Éleveur','Brutpfleger','Allevatore'],
+ ecologista:['Ecologista','Ecologista','Écologiste','Ökologe','Ecologista'],
+ grandes:['Especialista en grandes aves','Especialista en grans ocells','Spécialiste des grands oiseaux','Großvogel-Spezialist','Specialista di grandi uccelli'],
+ paseri:['Especialista en paseriformes','Especialista en passeriformes','Spécialiste des passereaux','Singvogel-Spezialist','Specialista di passeriformi'],
+ humedales:['Experto en humedales','Expert en aiguamolls','Expert des zones humides','Feuchtgebietsexperte','Esperto di zone umide'],
+ omnivoros:['Experto en omnívoros','Expert en omnívors','Expert des omnivores','Allesfresser-Experte','Esperto di onnivori'],
+ redtrofica:['Experto en red trófica','Expert en xarxa tròfica','Expert des réseaux trophiques','Nahrungsnetz-Experte','Esperto di reti trofiche'],
+ fotografo:['Fotógrafo','Fotògraf','Photographe','Fotograf','Fotografo'],
+ halconero:['Halconero','Falconer','Fauconnier','Falkner','Falconiere'],
+ historiador:['Historiador','Historiador','Historien','Historiker','Storico'],
+ lider:['Líder visionario','Líder visionari','Leader visionnaire','Visionär','Leader visionario'],
+ oologo:['Oólogo','Oòleg','Oologiste','Oologe','Oologo'],
+ pascicultor:['Pascicultor','Gestor de prades','Gestionnaire de prairie','Präriepfleger','Gestore di praterie'],
+ piscicultor:['Piscicultor','Piscicultor','Pisciculteur','Fischereiverwalter','Gestore ittico'],
+ rodentologo:['Rodentólogo','Rodentòleg','Rodentologue','Nagetierkundler','Roditologo'],
+ silvicultor:['Silvicultor','Silvicultor','Forestier','Förster','Guardia forestale'],
+ viticultor:['Viticultor','Viticultor','Viticulteur','Winzer','Viticoltore'],
+ behaviorist:['Conductista','Conductista','Comportementaliste','Verhaltensforscher','Comportamentista'],
+ bander:['Anillador de aves','Anellador d’ocells','Bagueur','Vogelberinger','Inanellatore'],
+ citizen:['Científico ciudadano','Científic ciutadà','Scientifique citoyen','Bürgerwissenschaftler','Scienziato cittadino'],
+ diet:['Especialista en dietas','Especialista en dietes','Spécialiste des régimes','Ernährungsspezialist','Specialista in diete'],
+ ethologist:['Etólogo','Etòleg','Éthologue','Ethologe','Etologo'],
+ mechanical:['Ingeniero mecánico','Enginyer mecànic','Ingénieur mécanique','Maschinenbauingenieur','Ingegnere meccanico'],
+ site:['Experto en emplazamientos','Expert en emplaçaments','Expert en choix de sites','Standortexperte','Esperto di siti'],
+ da_0:['Analista de datos del bosque','Analista de dades del bosc','Analyste de données de la forêt','Datenanalyst Wald','Analista dati del bosco'],
+ da_1:['Analista de datos de la pradera','Analista de dades de la prada','Analyste de données de la prairie','Datenanalyst Grasland','Analista dati della prateria'],
+ da_2:['Analista de datos del humedal','Analista de dades de l’aiguamoll','Analyste de données des zones humides','Datenanalyst Feuchtgebiet','Analista dati della zona umida'],
+ therio:['Teriogenólogo aviar','Teriogenòleg aviari','Thériogénologue aviaire','Vogel-Theriogenologe','Teriogenologo aviare'],
+ endangered:['Protector de especies amenazadas','Protector d’espècies amenaçades','Protecteur des espèces menacées','Artenschützer','Protettore di specie minacciate'],
+ pm_0:['Monitor de población del bosque','Monitor de poblacions del bosc','Observateur des populations de la forêt','Populationsbeobachter Wald','Monitor delle popolazioni del bosco'],
+ pm_1:['Monitor de población de la pradera','Monitor de poblacions de la prada','Observateur des populations de la prairie','Populationsbeobachter Grasland','Monitor delle popolazioni della prateria'],
+ pm_2:['Monitor de población del humedal','Monitor de poblacions de l’aiguamoll','Observateur des populations des zones humides','Populationsbeobachter Feuchtgebiet','Monitor delle popolazioni della zona umida'],
+ r_0:['Guarda del bosque','Guarda del bosc','Garde forestier','Waldranger','Guardiano del bosco'],
+ r_1:['Guarda de la pradera','Guarda de la prada','Garde de la prairie','Graslandranger','Guardiano della prateria'],
+ r_2:['Guarda del humedal','Guarda de l’aiguamoll','Garde des zones humides','Feuchtgebietsranger','Guardiano della zona umida'],
+ pellet:['Diseccionador de egagrópilas','Disseccionador d’egagròpiles','Disséqueur de pelotes','Gewöllezerleger','Dissettore di borre'],
+ smallclutch:['Especialista en puestas pequeñas','Especialista en postes petites','Spécialiste des petites couvées','Kleingelege-Spezialist','Specialista di piccole covate'],
+ winter:['Comedero invernal','Menjadora d’hivern','Mangeoire d’hiver','Winterfütterung','Mangiatoia invernale'],
+ apiarist:['Apicultor','Apicultor','Apiculteur','Imker','Apicoltore'],
+ brilliant:['Especialista en brillantes','Especialista en brillants','Spécialiste des brillants','Brillanten-Spezialist','Specialista dei brillanti'],
+ emerald:['Especialista en esmeraldas','Especialista en maragdes','Spécialiste des émeraudes','Smaragd-Spezialist','Specialista degli smeraldi'],
+ mango:['Especialista en mangos','Especialista en mangos','Spécialiste des mangues','Mango-Spezialist','Specialista dei mango'],
+ topaz:['Especialista en topacios','Especialista en topazis','Spécialiste des topazes','Topas-Spezialist','Specialista dei topazi'],
+ ecolodge:['Dueño de ecoalbergue','Propietari d’ecoalberg','Propriétaire d’écolodge','Ökolodge-Besitzer','Proprietario di ecolodge'],
+ hgardener:['Jardinero de colibríes','Jardiner de colibrís','Jardinier à colibris','Kolibrigärtner','Giardiniere dei colibrì'],
+ hcounter:['Contador de colibríes','Comptador de colibrís','Recenseur de colibris','Kolibrizähler','Contatore di colibrì'],
+};
+const IDX_NOM = {es:0,ca:1,fr:2,de:3,it:4};
 const BONUS_ID = Object.fromEntries(B.map(x=>[x.id,x]));
 function espColi(v){ return v>=10?6 : v>=6?4 : v>=3?3 : 0; }
 const VAL_COLI=[-3,0,1,2,3,4,6,8,10];
@@ -502,9 +629,9 @@ function idiomaInicial(){
 let LANG=idiomaInicial();
 const t=k=>T[LANG][k]??T.es[k];
 const fmt=(s,o)=>s.replace(/\{(\w+)\}/g,(m,k)=>o[k]);
-function nomCarta(c){ return (LANG==='es'||LANG==='ca')?c.nes:c.nen; }
+function nomCarta(c){ const n=NOMBRES[c.id]; return (LANG!=='en'&&n)?n[IDX_NOM[LANG]]:c.nen; }
 function descCarta(c){
-  if(c.coli!==undefined){ const n=t('coliN')[c.coli]; return {es:`Valor de tu ficha ${COLI_IC[c.coli]} ${n}`,ca:`Valor de la teva fitxa ${COLI_IC[c.coli]} ${n}`,en:`Value of your ${COLI_IC[c.coli]} ${n} token`,fr:`Valeur de votre jeton ${COLI_IC[c.coli]} ${n}`,de:`Wert deines ${COLI_IC[c.coli]} ${n}-Markers`,it:`Valore del tuo segnalino ${COLI_IC[c.coli]} ${n}`}[LANG]+': 3–4→3, 6–8→4, 10→6'; }
+  if(c.coli!==undefined){ const n=t('coliN')[c.coli]; return {es:`Valor de tu ficha ${COLI_IC[c.coli]} ${n}`,ca:`Valor de la teva fitxa ${COLI_IC[c.coli]} ${n}`,en:`Value of your ${COLI_IC[c.coli]} ${n} token`,fr:`Valeur de votre jeton ${COLI_IC[c.coli]} ${n}`,de:`Wert deines ${COLI_IC[c.coli]} ${n}-Markers`,it:`Valore del tuo segnalino ${COLI_IC[c.coli]} ${n}`}[LANG]+': 3\u2060–\u20604\u2060→\u20603, 6\u2060–\u20608\u2060→\u20604, 10\u2060→\u20606'; }
   return c.q[LANG]||c.q.es;
 }
 let TEMA = lsGet(K.tema)||'auto';
@@ -590,6 +717,7 @@ function pintar(){
   document.documentElement.lang=LANG;
   $('#gira').textContent=t('gira');
   pintarEntrada();
+  $('#cabSub').textContent=t('contador');
   $('#btnFin').textContent=t('verRes');
   $('#entrada').classList.toggle('oculto',pantalla!=='entrada');
   $('#cab').classList.toggle('oculto',pantalla==='entrada');
@@ -642,7 +770,7 @@ function fila(tx,sub,path){ return `<div class="fila"><label>${tx}<small>${sub}<
 function tramosTxt(c){
   if(c.t==='por') return ' · '+fmt(t('porCada'),{p:c.p});
   if(c.t!=='tramos') return '';
-  return ' · '+c.tr.map(([m,p],x)=>{ const sig=c.tr[x+1]; const r= sig ? (sig[0]-1>m?`${m}–${sig[0]-1}`:`${m}`) : `${m}+`; return `${r}→${p}`; }).join(', ');
+  return ' · '+c.tr.map(([m,p],x)=>{ const sig=c.tr[x+1]; const r= sig ? (sig[0]-1>m?`${m}–${sig[0]-1}`:`${m}`) : `${m}+`; return `<span style="white-space:nowrap">${r}→${p}</span>`; }).join(', ');
 }
 
 function pintarJuego(){
@@ -651,7 +779,9 @@ function pintarJuego(){
   $('#nombreActivo').textContent=nombre(a);
   { const el=$('#totalActivo'); if(el.textContent!==String(d.total)&&el.textContent!==''){ el.classList.remove('late'); void el.offsetWidth; el.classList.add('late'); } el.textContent=d.total; }
   const fr=t('frases');
-  let h=`<div class="frase">${fr[a%fr.length]}</div>`;
+  let nH=0; try{ nH=(JSON.parse(lsGet(K.hist))||[]).length; }catch(_){}
+  const nPart=E.guardada?nH:nH+1, fIni=new Date(E.inicio||Date.now()).toLocaleDateString(LANG,{day:'numeric',month:'short',year:'numeric'});
+  let h=`<div class="diario">${fIni} · ${fmt(t('partidaN'),{n:nPart})}</div><div class="frase">${fr[a%fr.length]}</div>`;
   h+=`<section class="panel" data-c="bosque"><h2><span class="trazo">${t('avesRec')}</span> <em>${d.aves+d.huevos+d.comida+d.bajo}</em></h2>
     ${fila(t('aves'),t('avesS'),'aves')}${fila(t('huevos'),t('huevosS'),'huevos')}${fila(t('comida'),t('comidaS'),'comida')}${fila(t('bajo'),t('bajoS'),'bajo')}</section>`;
   const man=E.cfg.duelo||E.cfg.lado==='manual';
@@ -668,7 +798,7 @@ function pintarJuego(){
     else if(c.usa==='reserva') ctrl=`<p class="nota">${fmt(t('usaReserva'),{n:j.reserva||0})}</p>`;
     else if(c.t==='pareja') ctrl=`<div class="fila"><label>${t('pareja')}</label>${paso(`bonus.${k}.v`,bn.v||0)}</div><div class="fila"><label>${t('trio')}</label>${paso(`bonus.${k}.v2`,bn.v2||0)}</div>`;
     else ctrl=`<div class="fila"><label>${t('cantidad')}</label>${paso(`bonus.${k}.v`,bn.v||0)}</div>`;
-    h+=`<div class="bonus"><div class="tit"><span>${esc(nomCarta(c))}</span><span class="pts">${puntosCarta(j,bn)}</span><button data-quita="${k}" aria-label="${t('quitar')}">×</button></div><div class="desc">${esc(descCarta(c))}${c.t==='auto'?'':tramosTxt(c)}</div>${ctrl}</div>`;
+    h+=`<div class="bonus"><div class="tit"><span>${esc(nomCarta(c))}</span><span class="pts">${puntosCarta(j,bn)}</span><button data-quita="${k}" aria-label="${t('quitar')}">×</button></div><div class="desc">${esc(descCarta(c))}${c.t==='auto'?'':tramosTxt(c)}</div>${c.e!=='base'&&LANG!=='en'?`<div class="orig">${esc(c.nen)}</div>`:''}${ctrl}</div>`;
   });
   const disp=B.filter(c=>c.e==='base'||E.cfg.exp[c.e]).sort((x,y)=>nomCarta(x).localeCompare(nomCarta(y),LANG));
   h+=`<div class="anadir"><select id="selBonus" aria-label="${t('anadirBonus')}"><option value="">${t('anadirBonus')}</option>${disp.map(c=>`<option value="${c.id}">${esc(nomCarta(c))}${c.e!=='base'?' · '+t('exp')[c.e]:''}</option>`).join('')}</select><button class="boton" id="btnAddBonus">＋</button></div>`;
@@ -788,7 +918,7 @@ function empezar(){
       if(pruebasQuedan()<=0){ pantalla='acceso'; pintar(); return; }
       lsSet(K.pruebas,String(pruebasUsadas()+1));
     }
-    E.empezada=true; E.guardada=false; E.activo=0;
+    E.empezada=true; E.guardada=false; E.activo=0; E.inicio=Date.now();
   }
   guardar(); pantalla='juego'; pintar(); window.scrollTo(0,0);
 }
