@@ -77,6 +77,11 @@
   #entrada .firma{font-size:.82rem;color:#fff;opacity:.95;margin-top:12px;text-shadow:0 1px 4px rgba(30,50,80,.5)}
   @keyframes late{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
   @media (prefers-reduced-motion:reduce){#entrada .toca{animation:none}}
+  /* Entrada con la ilustración de Davito (caché v11) */
+  #entrada{background:url(splash.webp) center bottom/cover no-repeat,linear-gradient(180deg,#f9f4e7 0%,#f9f4e7 30%,#c9f0e8 60%,#91d8fe 100%);background-color:#91d8fe;padding-top:calc(64px + env(safe-area-inset-top))}
+  #entrada .tit{color:#2e2a24;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+  #entrada .sub{color:#b0642e;text-shadow:none;transform:rotate(-2deg);margin-top:2px;font-size:2.1rem}
+  #entrada .firma{color:#2e4a5c;text-shadow:0 1px 2px rgba(255,255,255,.6)}
 
   /* Cabecera */
   header{position:sticky;top:0;z-index:5;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;

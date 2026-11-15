@@ -13,8 +13,8 @@ Contador de puntos no oficial para Wingspan y sus expansiones (Europa, Oceanía,
 - La versión visible está en la constante `VERSION` de `index.html`.
 - Licencia: objeto `LICENCIA` en `index.html` (clave, enlace de compra y partidas de prueba).
 
-## Imagen de entrada
-Si se añade un `splash.webp` (vertical, unos 940×1670), la entrada lo usa de fondo. Sin él, se ve un degradado de cielo y prado.
+## Imagen de entrada e icono
+`splash.webp` (841×1870, ilustración de Davito) es el fondo de la entrada. El icono (`icon-*.png`, máster en `icon-1024.png`) también es arte de Davito.
 
 ## Tipografías
-Carpeta `fonts/`: Antonio, Jost y Dancing Script (licencia SIL Open Font License 1.1). Hay que subir la carpeta entera.
+Carpeta `fonts/`: Antonio, Jost, Lora, Cormorant SC y Dancing Script (licencia SIL Open Font License 1.1). Hay que subir la carpeta entera.

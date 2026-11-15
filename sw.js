@@ -1,10 +1,10 @@
 // Service worker del Contador de Wingspan (PenTech)
 // Red primero; la caché solo sirve para usar la app sin conexión.
 // Subir CACHE en cada publicación.
-const CACHE = 'wingspan-contador-v10';
+const CACHE = 'wingspan-contador-v11';
 const PREFIJO = 'wingspan-contador-';
 const BASE = new URL('./', self.location).pathname;
-const ARCHIVOS = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png', 'favicon-32.png',
+const ARCHIVOS = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png', 'favicon-32.png', 'splash.webp',
   'fonts/antonio-latin-200-normal.woff2', 'fonts/antonio-latin-500-normal.woff2', 'fonts/jost-latin-600-normal.woff2',
   'fonts/lora-latin-400-normal.woff2', 'fonts/lora-latin-400-italic.woff2', 'fonts/lora-latin-500-normal.woff2', 'fonts/lora-latin-600-normal.woff2',
   'fonts/cormorant-sc-latin-700-normal.woff2', 'fonts/dancing-script-latin-600-normal.woff2'];
