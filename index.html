@@ -296,7 +296,14 @@
   .abreBonus{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 4px;padding:12px;border:1.5px dashed var(--celda-borde);border-radius:8px;background:var(--celda);color:var(--tinta);font-family:var(--serif);font-size:1.05rem;cursor:pointer}
   .abreBonus span{width:30px;height:30px;border-radius:50%;background:var(--bosque);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.2rem}
   #buscaBonus{margin:0 0 10px}
-  .grupoT{font-family:var(--versal);font-weight:700;font-size:1.2rem;color:var(--marron);margin:12px 2px 4px;border-bottom:1px solid var(--borde-hoja);padding-bottom:3px}
+  .grupoT{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;border-bottom:1px solid var(--borde-hoja);background:none;cursor:pointer;text-align:left;font-family:var(--versal);font-weight:700;font-size:1.3rem;color:var(--marron);margin:4px 0 0;padding:12px 4px 8px}
+  .grupoT small{font-family:var(--serif);font-weight:400;font-size:.95rem;color:var(--gris)}
+  .grupoT .flecha{flex:0 0 auto;transition:transform .25s}
+  .grupoB.abierto .flecha,.grupoB.busca .flecha{transform:rotate(90deg)}
+  .grupoL{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+  .grupoL>div{overflow:hidden}
+  .grupoB.abierto .grupoL,.grupoB.busca .grupoL{grid-template-rows:1fr}
+  @media (prefers-reduced-motion:reduce){.grupoL,.grupoT .flecha{transition:none}}
   .opcB{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px dashed var(--linea);background:none;color:var(--tinta);padding:11px 4px;font-family:var(--serif);font-size:1.05rem;cursor:pointer}
   .opcB b{font-weight:500}
   .opcB i{font-style:italic;color:var(--gris);font-size:.92rem;white-space:nowrap}
@@ -904,9 +911,10 @@ function abrirSelBonus(){
   let h=`<h2>${t('bonus')}</h2><input type="text" id="buscaBonus" placeholder="${t('buscar')}" autocomplete="off" spellcheck="false"><div id="listaBonus">`;
   grupos.forEach(e=>{
     const cs=B.filter(c=>c.e===e).sort((x,y)=>nomCarta(x).localeCompare(nomCarta(y),LANG));
-    h+=`<div class="grupoB"><div class="grupoT">${e==='base'?t('base'):t('exp')[e]}</div>`;
+    const abierto=grupos.length===1;
+    h+=`<div class="grupoB${abierto?' abierto':''}"><button class="grupoT" data-plegar="1" aria-expanded="${abierto}"><span>${e==='base'?t('base'):t('exp')[e]} <small>(${cs.length})</small></span><svg class="flecha" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button><div class="grupoL"><div>`;
     cs.forEach(c=>{ h+=`<button class="opcB" data-elige="${c.id}" data-busca="${esc((nomCarta(c)+' '+c.nen).toLowerCase())}"><b>${esc(nomCarta(c))}</b>${e!=='base'?`<i>${t('exp')[e]}</i>`:''}</button>`; });
-    h+=`</div>`;
+    h+=`</div></div></div>`;
   });
   h+=`</div><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
   abrirHoja(h);
@@ -994,6 +1002,7 @@ document.addEventListener('click',e=>{
   if(ds.lang){ LANG=ds.lang; lsSet(K.idioma,LANG); cerrarMenus(); pintar(); if(!$('#velo').classList.contains('oculto')) cerrarHoja(); return; }
   if(ds.tema){ TEMA=ds.tema; lsSet(K.tema,TEMA); aplicarTema(); cerrarMenus(); return; }
   if(ds.ver!==undefined){ const d=$('#det'+ds.ver); d.classList.toggle('oculto'); b.textContent=d.classList.contains('oculto')?t('ver'):t('ocultar'); return; }
+  if(ds.plegar){ const g=b.closest('.grupoB'); g.classList.toggle('abierto'); b.setAttribute('aria-expanded',g.classList.contains('abierto')); return; }
   if(ds.elige){ E.jug[E.activo].bonus.push({id:ds.elige,v:0,v2:0}); E.guardada=false; guardar(); cerrarHoja(); pintar(); setTimeout(()=>{ const bs=document.querySelectorAll('.bonus'); if(bs.length) bs[bs.length-1].scrollIntoView({block:'center',behavior:'smooth'}); },50); return; }
   if(ds.borra!==undefined){ let H=[]; try{H=JSON.parse(lsGet(K.hist))||[];}catch(_){} H.splice(+ds.borra,1); lsSet(K.hist,JSON.stringify(H)); abrirArchivo(); return; }
   switch(b.id){
@@ -1021,7 +1030,7 @@ document.addEventListener('change',e=>{
   if(x.id==='chkDuelo'){ E.cfg.duelo=x.checked; guardar(); pintar(); return; }
 });
 document.addEventListener('input',e=>{ const x=e.target;
-  if(x.id==='buscaBonus'){ const q=x.value.trim().toLowerCase(); document.querySelectorAll('.opcB').forEach(o=>o.classList.toggle('oculto',!!q&&!o.dataset.busca.includes(q))); document.querySelectorAll('.grupoB').forEach(g=>g.classList.toggle('oculto',!g.querySelector('.opcB:not(.oculto)'))); return; } if(x.dataset.nom!==undefined){ E.jug[+x.dataset.nom].nombre=x.value; guardar(); } });
+  if(x.id==='buscaBonus'){ const q=x.value.trim().toLowerCase(); document.querySelectorAll('.opcB').forEach(o=>o.classList.toggle('oculto',!!q&&!o.dataset.busca.includes(q))); document.querySelectorAll('.grupoB').forEach(g=>{ g.classList.toggle('oculto',!g.querySelector('.opcB:not(.oculto)')); g.classList.toggle('busca',!!q); }); return; } if(x.dataset.nom!==undefined){ E.jug[+x.dataset.nom].nombre=x.value; guardar(); } });
 document.addEventListener('focusin',e=>{ if(e.target.type==='number') setTimeout(()=>{ try{ e.target.select(); }catch(_){} },0); });
 document.addEventListener('contextmenu',e=>{ if(!e.target.closest('.hoja')&&!e.target.closest('input')) e.preventDefault(); });
 $('#velo').addEventListener('click',e=>{ if(e.target.id==='velo') cerrarHoja(); });
