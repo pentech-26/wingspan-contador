@@ -315,6 +315,20 @@
   .opcB:active{background:var(--resalte)}
   html[data-tema=noche] .boton.claro{color:var(--tinta)}
   html[data-tema=noche] .boton.peligro{color:var(--rojo)}
+
+  /* ---- Versión gratis / completa ---- */
+  .candado{font-style:normal;font-size:.8em;margin-left:6px;opacity:.75;filter:grayscale(.2)}
+  .seg button.bloq{opacity:.6}
+  .chk.bloq span{opacity:.7}
+  .abreBonus.bloq{opacity:.75}
+  .enlacePro{display:block;margin:14px auto 0;background:none;border:0;color:var(--marron);font-family:var(--versal);font-weight:700;font-size:1.15rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:8px}
+  .masArchivo{display:block;width:100%;margin:4px 0 10px;padding:10px 12px;border:1.5px dashed var(--celda-borde);border-radius:10px;background:var(--celda);color:var(--tinta);font-family:var(--serif);font-size:.95rem;font-style:italic;cursor:pointer;line-height:1.4}
+  .proBloq{font-weight:600;color:var(--marron);margin:0 0 6px}
+  .proLista{text-align:left;margin:6px auto 14px;padding:0;list-style:none;max-width:320px}
+  .proLista li{padding:6px 0 6px 28px;position:relative;border-bottom:1px dashed var(--linea);font-size:1rem}
+  .proLista li:last-child{border-bottom:0}
+  .proLista li::before{content:'✓';position:absolute;left:4px;color:var(--bosque);font-weight:700}
+  .proSep{margin:18px 0 0;font-weight:600}
 </style>
 </head>
 <body>
@@ -347,8 +361,10 @@
 <script>
 /* ============ CONFIGURACIÓN ============ */
 const VERSION = 'v1.0';
-// activa:false → modo testing: sin pantalla de clave y sin gastar partidas de prueba. Poner true para volver a pedir la clave.
-const LICENCIA = {activa:false, clave:'XXH2-F856-JM4R', compra:'https://buymeacoffee.com/pentech', pruebas:3};
+// Versión gratis + versión completa. activa:false → todo desbloqueado (solo para pruebas).
+// Gratis: juego base, 2-5 jugadores, bonus a mano, archivo con las 3 últimas partidas a la vista.
+// Con clave: expansiones, calculadora de cartas bonus, 6-7 jugadores y archivo completo.
+const LICENCIA = {activa:true, clave:'XXH2-F856-JM4R', compra:'https://buymeacoffee.com/pentech', archivoGratis:3, maxGratis:5};
 const K = {estado:'wingspan-contador-v1', lic:'wingspan-licencia-v1', pruebas:'wingspan-pruebas', hist:'wingspan-historial-v1', idioma:'wingspan-idioma', tema:'wingspan-tema'};
 const IDIOMAS = {es:'Español', ca:'Català', en:'English', fr:'Français', de:'Deutsch', it:'Italiano'};
 
@@ -505,6 +521,16 @@ it:{buscar:'Cerca carta…',partidaN:'Partita n. {n}',contador:'Contatore',toca:
  legal:'Contapunti non ufficiale, creato in modo indipendente da PenTech. Non è affiliato, sponsorizzato né approvato da Stonemaier Games. Wingspan è un gioco di Elizabeth Hargrave pubblicato da Stonemaier Games; nomi e marchi appartengono ai rispettivi proprietari. Per giocare serve una copia del gioco. La chiave di licenza dà accesso a questa app, non al gioco.',
  frases:['Non far scappare gli uccelli!','Ogni uovo conta.','Tranquillo, il falco non fa punti… o forse sì.','Se l’uccello canta, conta.','Cip cip, il punteggio sale.','Meglio un uccello in mano che cento in volo.','Conta le piume, non la fretta.']}
 };
+/* Textos de la versión completa */
+const TP = {
+es:{pro:'Versión completa',proD:'Desbloquea todo el contador con una sola compra:',proLista:['Expansiones Europa, Oceanía, Asia y Américas','Calculadora de cartas bonus','Partidas de 6 y 7 jugadores','Archivo de partidas completo'],proBloq:'Esto está en la versión completa.',tengoClave:'¿Ya tienes la clave?',proOk:'Tienes la versión completa. ¡Gracias por apoyar PenTech!',bonusMano:'Puntos de cartas bonus',bonusManoS:'Suma a mano los puntos de tus cartas',archMas:'Y {n} partidas más guardadas. Las verás con la versión completa.',archMas1:'Y 1 partida más guardada. La verás con la versión completa.'},
+ca:{pro:'Versió completa',proD:'Desbloqueja tot el comptador amb una sola compra:',proLista:['Expansions Europa, Oceania, Àsia i Amèriques','Calculadora de cartes de bonus','Partides de 6 i 7 jugadors','Arxiu de partides complet'],proBloq:'Això és a la versió completa.',tengoClave:'Ja tens la clau?',proOk:'Tens la versió completa. Gràcies per donar suport a PenTech!',bonusMano:'Punts de cartes de bonus',bonusManoS:'Suma a mà els punts de les teves cartes',archMas:'I {n} partides més desades. Les veuràs amb la versió completa.',archMas1:'I 1 partida més desada. La veuràs amb la versió completa.'},
+en:{pro:'Full version',proD:'Unlock the whole counter with a single purchase:',proLista:['Europe, Oceania, Asia and Americas expansions','Bonus card calculator','6 and 7 player games','Full game archive'],proBloq:'This is part of the full version.',tengoClave:'Already have a key?',proOk:'You have the full version. Thanks for supporting PenTech!',bonusMano:'Bonus card points',bonusManoS:'Add up your bonus card points by hand',archMas:'And {n} more saved games. You will see them with the full version.',archMas1:'And 1 more saved game. You will see it with the full version.'},
+fr:{pro:'Version complète',proD:'Débloquez tout le compteur en un seul achat :',proLista:['Extensions Europe, Océanie, Asie et Amériques','Calculatrice des cartes Bonus','Parties à 6 et 7 joueurs','Archives complètes'],proBloq:'Ceci fait partie de la version complète.',tengoClave:'Vous avez déjà la clé ?',proOk:'Vous avez la version complète. Merci de soutenir PenTech !',bonusMano:'Points des cartes Bonus',bonusManoS:'Additionnez à la main les points de vos cartes',archMas:'Et {n} autres parties enregistrées. Vous les verrez avec la version complète.',archMas1:'Et 1 autre partie enregistrée. Vous la verrez avec la version complète.'},
+de:{pro:'Vollversion',proD:'Schalte den ganzen Zähler mit einem einzigen Kauf frei:',proLista:['Erweiterungen Europa, Ozeanien, Asien und Amerika','Rechner für Bonuskarten','Partien mit 6 und 7 Spielern','Vollständiges Spielarchiv'],proBloq:'Das gehört zur Vollversion.',tengoClave:'Schon einen Schlüssel?',proOk:'Du hast die Vollversion. Danke, dass du PenTech unterstützt!',bonusMano:'Punkte der Bonuskarten',bonusManoS:'Zähle die Punkte deiner Bonuskarten selbst zusammen',archMas:'Und {n} weitere gespeicherte Spiele. Du siehst sie mit der Vollversion.',archMas1:'Und 1 weiteres gespeichertes Spiel. Du siehst es mit der Vollversion.'},
+it:{pro:'Versione completa',proD:'Sblocca tutto il contatore con un solo acquisto:',proLista:['Espansioni Europa, Oceania, Asia e Americhe','Calcolatrice delle carte bonus','Partite a 6 e 7 giocatori','Archivio completo delle partite'],proBloq:'Questo fa parte della versione completa.',tengoClave:'Hai già la chiave?',proOk:'Hai la versione completa. Grazie per sostenere PenTech!',bonusMano:'Punti delle carte bonus',bonusManoS:'Somma a mano i punti delle tue carte',archMas:'E altre {n} partite salvate. Le vedrai con la versione completa.',archMas1:'E 1 altra partita salvata. La vedrai con la versione completa.'}
+};
+Object.entries(TP).forEach(([k,v])=>Object.assign(T[k],v));
 const ORD = {es:n=>n+'.º',ca:n=>n+({1:'r',2:'n',3:'r',4:'t'}[n]||'è'),en:n=>n+({1:'st',2:'nd',3:'rd'}[n]||'th'),fr:n=>n+(n===1?'er':'e'),de:n=>n+'.',it:n=>n+'º'};
 
 /* ============ CARTAS BONUS ============ */
@@ -691,8 +717,14 @@ let E = cargar() || nuevoEstado();
 function guardar(){ lsSet(K.estado, JSON.stringify(E)); }
 function nombre(i){ return (E.jug[i].nombre||'').trim() || (t('jugador')+' '+(i+1)); }
 const licOK = ()=>!LICENCIA.activa || lsGet(K.lic)==='true';
-const pruebasUsadas = ()=>parseInt(lsGet(K.pruebas)||'0',10)||0;
-const pruebasQuedan = ()=>Math.max(0,LICENCIA.pruebas-pruebasUsadas());
+const CANDADO = '<i class="candado" aria-hidden="true">🔒</i>';
+// Sin clave, la partida se queda dentro de la versión gratis (por si venía de una partida guardada con todo activado)
+function limitarGratis(){
+  if(licOK()) return;
+  E.cfg.exp={eur:false,oce:false,asia:false,ame:false}; E.cfg.duelo=false;
+  if(E.cfg.n>LICENCIA.maxGratis){ E.cfg.n=LICENCIA.maxGratis; E.jug.length=E.cfg.n; if(E.activo>=E.cfg.n) E.activo=0; }
+}
+limitarGratis();
 
 /* ============ CÁLCULOS ============ */
 function repartir(cant,valores){
@@ -729,7 +761,7 @@ function puntosCarta(j,bn){
   if(c.t==='auto') return E.cfg.exp.ame?c.f(j):0;
   let p=0; c.tr.forEach(([m,q])=>{ if(v>=m) p=q; }); return p;
 }
-function cartaActiva(bn){ const c=BONUS_ID[bn.id]; return c&&(c.e==='base'||E.cfg.exp[c.e]); }
+function cartaActiva(bn){ const c=BONUS_ID[bn.id]; return licOK()&&c&&(c.e==='base'||E.cfg.exp[c.e]); }
 function puntosBonus(j){ return j.bonus.filter(cartaActiva).reduce((s,bn)=>s+puntosCarta(j,bn),0)+(j.bonusMan||0); }
 function desglose(){
   const R=puntosRondas(),N=puntosNectar();
@@ -761,36 +793,22 @@ function pintar(){
   $('#entrada').classList.toggle('oculto',pantalla!=='entrada');
   $('#cab').classList.toggle('oculto',pantalla==='entrada');
   $('#barraTotal').classList.toggle('oculto',pantalla!=='juego');
-  $('#btnAjustes').classList.toggle('oculto',pantalla==='acceso');
-  if(pantalla==='acceso') return pintarAcceso();
   if(pantalla==='ajustes') return pintarAjustes();
   if(pantalla==='juego') return pintarJuego();
 }
 function pie(){ return `<div class="pie"><button id="btnLegal">${t('aviso')} · ${VERSION}</button></div>`; }
 
-function pintarAcceso(){
-  $('#tabs').innerHTML='';
-  const q=pruebasQuedan();
-  $('#main').innerHTML=`<section class="panel acceso" data-c="pradera"><h2 style="justify-content:center"><span class="trazo">${t('acceso')}</span></h2>
-    <input type="text" id="inClave" placeholder="${t('clave')}" autocomplete="off" autocapitalize="characters" spellcheck="false">
-    <button class="boton" id="btnActivar">${t('activar')}</button>
-    <p class="msg" id="msgClave"></p>
-    <p class="nota">${t('clavePie')}</p>
-    <button class="boton oro" id="btnComprar">${t('comprar')}</button>
-    ${q>0?`<button class="boton claro" id="btnProbar">${t('probar')}</button><p class="nota">${q===1?t('quedan1'):fmt(t('quedan'),{n:q})}</p>`:`<p class="nota">${fmt(t('agotada'),{n:LICENCIA.pruebas})}</p>`}
-  </section>${pie()}`;
-}
 
 function pintarAjustes(){
   $('#tabs').innerHTML='';
   const c=E.cfg;
   $('#main').innerHTML=`<section class="panel" data-c="humedal"><h2><span class="trazo">${t('jugadores')}</span></h2>
-    <div class="seg" id="segN">${[2,3,4,5,6,7].map(n=>`<button data-n="${n}" class="${c.n===n?'activo':''}">${n}</button>`).join('')}</div>
+    <div class="seg" id="segN">${[2,3,4,5,6,7].map(n=>{ const bq=!licOK()&&n>LICENCIA.maxGratis; return `<button data-n="${n}" class="${c.n===n?'activo':''}${bq?' bloq':''}">${n}${bq?CANDADO:''}</button>`; }).join('')}</div>
     <div class="nombres">${E.jug.map((j,i)=>`<input type="text" maxlength="18" data-nom="${i}" placeholder="${t('jugador')} ${i+1}" value="${esc(j.nombre)}">`).join('')}</div>
     ${c.n>5?`<p class="nota">${t('bandada')}</p>`:''}
   </section>
   <section class="panel" data-c="bosque"><h2><span class="trazo">${t('expansiones')}</span></h2>
-    ${['eur','oce','asia','ame'].map(x=>`<label class="chk"><input type="checkbox" data-exp="${x}" ${c.exp[x]?'checked':''}><span>${t('exp')[x]}<small>${t('expD')[x]}</small></span></label>`).join('')}
+    ${['eur','oce','asia','ame'].map(x=>`<label class="chk${licOK()?'':' bloq'}"><input type="checkbox" data-exp="${x}" ${c.exp[x]?'checked':''}><span>${t('exp')[x]}${licOK()?'':CANDADO}<small>${t('expD')[x]}</small></span></label>`).join('')}
     ${c.exp.asia&&c.n===2?`<label class="chk"><input type="checkbox" id="chkDuelo" ${c.duelo?'checked':''}><span>${t('duelo')}<small>${t('dueloD')}</small></span></label>`:''}
   </section>
   <section class="panel" data-c="humedal"><h2><span class="trazo">${t('objetivos')}</span></h2>
@@ -801,6 +819,7 @@ function pintarAjustes(){
     ${E.empezada?`<button class="boton peligro" id="btnNueva">${t('nueva')}</button>`:''}
   </div>
   <div class="barra"><button class="boton oro" id="btnEmpezar">${E.empezada?t('volverRec'):t('empezar')}</button></div>
+  ${LICENCIA.activa?`<button class="enlacePro" id="btnPro">${licOK()?'✓ ':'🔓 '}${t('pro')}</button>`:''}
   ${pie()}`;
 }
 
@@ -840,8 +859,9 @@ function pintarJuego(){
     else ctrl=`<div class="fila"><label>${t('cantidad')}</label>${paso(`bonus.${k}.v`,bn.v||0)}</div>`;
     h+=`<div class="bonus"><div class="tit"><span>${esc(nomCarta(c))}</span><span class="pts">${puntosCarta(j,bn)}</span><button data-quita="${k}" aria-label="${t('quitar')}">×</button></div><div class="desc">${esc(descCarta(c))}${c.t==='auto'?'':tramosTxt(c)}</div>${c.e!=='base'&&LANG!=='en'?`<div class="orig">${esc(c.nen)}</div>`:''}${ctrl}</div>`;
   });
-  h+=`<button class="abreBonus" id="btnAbreBonus"><span>＋</span>${t('anadirBonus')}</button>`;
-  h+=`<div class="fila"><label>${t('otrosBonus')}<small>${t('otrosBonusS')}</small></label>${paso('bonusMan',j.bonusMan||0)}</div></section>`;
+  h+=`<button class="abreBonus${licOK()?'':' bloq'}" id="btnAbreBonus"><span>＋</span>${t('anadirBonus')}${licOK()?'':CANDADO}</button>`;
+  h+= licOK() ? `<div class="fila"><label>${t('otrosBonus')}<small>${t('otrosBonusS')}</small></label>${paso('bonusMan',j.bonusMan||0)}</div></section>`
+              : `<div class="fila"><label>${t('bonusMano')}<small>${t('bonusManoS')}</small></label>${paso('bonusMan',j.bonusMan||0)}</div></section>`;
   if(E.cfg.exp.oce){
     h+=`<section class="panel" data-c="rosa"><h2><span class="trazo">${t('nectar')}</span> <em>${d.nectar}</em></h2><p class="nota">${t('nectarS')}</p><div class="grid3">`;
     t('habs').forEach((hb,x)=>{ h+=`<div><label>${rombo(x)} ${hb}</label><input type="number" inputmode="numeric" data-p="nectar.${x}" value="${j.nectar[x]}"><b>${d.nectarDet[x]} ${t('pts')}</b></div>`; });
@@ -896,7 +916,8 @@ function abrirArchivo(){
   const F=t('filas');
   let h=`<h2><span class="trazo">${t('archivo')}</span></h2>`;
   if(!H.length) h+=`<p class="nota">${t('archVacio')}</p>`;
-  H.forEach((r,k)=>{
+  const ocultas = licOK() ? 0 : Math.max(0,H.length-LICENCIA.archivoGratis);
+  H.slice(0,H.length-ocultas).forEach((r,k)=>{
     const g=r.jug.filter(x=>x.p===1);
     const fecha=new Date(r.fecha).toLocaleDateString(LANG,{day:'numeric',month:'short',year:'numeric'});
     const ex=[t('base'),...r.exp.map(e=>t('exp')[e])].join(' + ');
@@ -908,7 +929,8 @@ function abrirArchivo(){
       <tr class="gana"><td>${F.total}</td>${r.jug.map(x=>`<td>${x.total}</td>`).join('')}</tr></table></div></div>
       <div class="acc"><button class="boton claro" data-ver="${k}">${t('ver')}</button><button class="boton peligro" data-borra="${k}">${t('borrar')}</button></div></div>`;
   });
-  h+=`<div class="barra">${H.length?`<button class="boton peligro" id="btnVaciar">${t('vaciar')}</button>`:''}<button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
+  if(ocultas) h+=`<button class="masArchivo" id="btnPro">${CANDADO} ${ocultas===1?t('archMas1'):fmt(t('archMas'),{n:ocultas})}</button>`;
+  h+=`<div class="barra">${H.length&&!ocultas?`<button class="boton peligro" id="btnVaciar">${t('vaciar')}</button>`:''}<button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
   confirmaVaciar=false; abrirHoja(h);
 }
 function abrirSelBonus(){
@@ -923,6 +945,20 @@ function abrirSelBonus(){
   });
   h+=`</div><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`;
   abrirHoja(h);
+}
+function abrirPro(bloqueado){
+  if(licOK()){ abrirHoja(`<h2><span class="trazo">${t('pro')}</span></h2><p class="nota" style="text-align:center">${t('proOk')}</p><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`); return; }
+  abrirHoja(`<div class="acceso"><h2><span class="trazo">${t('pro')}</span></h2>
+    ${bloqueado?`<p class="proBloq">${CANDADO} ${t('proBloq')}</p>`:''}
+    <p class="nota">${t('proD')}</p>
+    <ul class="proLista">${t('proLista').map(x=>`<li>${x}</li>`).join('')}</ul>
+    <button class="boton oro" id="btnComprar">${t('comprar')}</button>
+    <p class="proSep">${t('tengoClave')}</p>
+    <input type="text" id="inClave" placeholder="${t('clave')}" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <button class="boton" id="btnActivar">${t('activar')}</button>
+    <p class="msg" id="msgClave"></p>
+    <p class="nota">${t('clavePie')}</p>
+    <button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`);
 }
 function abrirLegal(){ abrirHoja(`<h2><span class="trazo">${t('aviso')}</span></h2><p>${t('legal')}</p><p class="nota">Wingspan · ${t('contador')} · ${VERSION} · PenTech</p><div class="barra"><button class="boton claro" id="btnCerrar">${t('cerrar')}</button></div>`); }
 
@@ -961,15 +997,11 @@ function confeti(){
 /* ============ EVENTOS ============ */
 function entrar(){
   canto();
-  pantalla = (licOK()||E.empezada) ? (E.empezada?'juego':'ajustes') : 'acceso';
+  pantalla = E.empezada?'juego':'ajustes';
   pintar(); window.scrollTo(0,0);
 }
 function empezar(){
   if(!E.empezada){
-    if(!licOK()){
-      if(pruebasQuedan()<=0){ pantalla='acceso'; pintar(); return; }
-      lsSet(K.pruebas,String(pruebasUsadas()+1));
-    }
     E.empezada=true; E.guardada=false; E.activo=0; E.inicio=Date.now();
   }
   guardar(); pantalla='juego'; pintar(); window.scrollTo(0,0);
@@ -979,13 +1011,13 @@ function nuevaPartida(){
   E.cfg={n:2,exp:{eur:false,oce:false,asia:false,ame:false},lado:'verde',duelo:false};
   E.jug=[0,1].map(nuevoJugador);
   E.activo=0; E.empezada=false; E.guardada=false; guardar(); cerrarHoja();
-  pantalla = licOK()||pruebasQuedan()>0 ? 'ajustes' : 'acceso'; pintar(); window.scrollTo(0,0);
+  pantalla = 'ajustes'; pintar(); window.scrollTo(0,0);
 }
 function activarClave(){
   const v=($('#inClave').value||'').toUpperCase().replace(/[\s-]/g,'');
   const ok=v===LICENCIA.clave.replace(/-/g,'');
   const m=$('#msgClave');
-  if(ok){ lsSet(K.lic,'true'); m.className='msg bien'; m.textContent=t('activada'); setTimeout(()=>{ pantalla=E.empezada?'juego':'ajustes'; pintar(); },700); }
+  if(ok){ lsSet(K.lic,'true'); m.className='msg bien'; m.textContent=t('activada'); confeti(); setTimeout(()=>{ cerrarHoja(); pintar(); },900); }
   else { m.className='msg mal'; m.textContent=t('claveMal'); }
 }
 
@@ -1002,7 +1034,7 @@ document.addEventListener('click',e=>{
   if(ds.tab!==undefined){ E.activo=+ds.tab; guardar(); pintar(); window.scrollTo(0,0); return; }
   if(ds.d){ fijar(ds.d,(leer(E.jug[E.activo],ds.d)||0)+(+ds.v)); return; }
   if(ds.quita!==undefined){ E.jug[E.activo].bonus.splice(+ds.quita,1); E.guardada=false; guardar(); pintar(); return; }
-  if(ds.n){ ponerN(+ds.n); pintar(); return; }
+  if(ds.n){ if(!licOK()&&+ds.n>LICENCIA.maxGratis){ abrirPro(true); return; } ponerN(+ds.n); pintar(); return; }
   if(ds.lado){ E.cfg.lado=ds.lado; E.guardada=false; guardar(); pintar(); return; }
   if(ds.lang){ LANG=ds.lang; lsSet(K.idioma,LANG); cerrarMenus(); pintar(); if(!$('#velo').classList.contains('oculto')) cerrarHoja(); return; }
   if(ds.tema){ TEMA=ds.tema; lsSet(K.tema,TEMA); aplicarTema(); cerrarMenus(); return; }
@@ -1014,7 +1046,8 @@ document.addEventListener('click',e=>{
     case 'btnIdioma': abrirMenuIdioma(); break;
     case 'btnTema': abrirMenuTema(); break;
     case 'btnAjustes': cerrarHoja(); pantalla=pantalla==='ajustes'&&E.empezada?'juego':'ajustes'; pintar(); window.scrollTo(0,0); break;
-    case 'btnAbreBonus': abrirSelBonus(); break;
+    case 'btnAbreBonus': if(licOK()) abrirSelBonus(); else abrirPro(true); break;
+    case 'btnPro': abrirPro(false); break;
     case 'btnEmpezar': empezar(); break;
     case 'btnFin': abrirResultado(true); break;
     case 'btnCerrar': cerrarHoja(); break;
@@ -1024,13 +1057,13 @@ document.addEventListener('click',e=>{
     case 'btnLegal': abrirLegal(); break;
     case 'btnActivar': activarClave(); break;
     case 'btnComprar': window.open(LICENCIA.compra,'_blank','noopener'); break;
-    case 'btnProbar': pantalla='ajustes'; pintar(); break;
     case 'btnVaciar': if(!confirmaVaciar){ confirmaVaciar=true; b.textContent=t('otraVez'); } else { lsSet(K.hist,'[]'); abrirArchivo(); } break;
   }
 });
 document.addEventListener('change',e=>{
   const x=e.target;
   if(x.dataset.p){ fijar(x.dataset.p,x.value); return; }
+  if(x.dataset.exp&&!licOK()){ x.checked=false; abrirPro(true); return; }
   if(x.dataset.exp){ E.cfg.exp[x.dataset.exp]=x.checked; if(x.dataset.exp==='asia'&&!x.checked) E.cfg.duelo=false; E.guardada=false; guardar(); pintar(); return; }
   if(x.id==='chkDuelo'){ E.cfg.duelo=x.checked; guardar(); pintar(); return; }
 });
