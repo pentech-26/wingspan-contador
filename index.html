@@ -317,10 +317,13 @@
   html[data-tema=noche] .boton.peligro{color:var(--rojo)}
 
   /* ---- Versión gratis / completa ---- */
-  .candado{font-style:normal;font-size:.8em;margin-left:6px;opacity:.75;filter:grayscale(.2)}
-  .seg button.bloq{opacity:.6}
-  .chk.bloq span{opacity:.7}
-  .abreBonus.bloq{opacity:.75}
+  .candado{font-style:normal;font-size:1.05em;margin-left:6px;opacity:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));display:inline-block;vertical-align:-.05em}
+  .seg button.bloq{color:var(--gris)}
+  .seg button.bloq .candado{font-size:.9em;margin-left:3px}
+  .chk.bloq span{color:var(--gris)}
+  .chk.bloq input{opacity:.5}
+  .abreBonus.bloq{color:var(--gris)}
+  .abreBonus.bloq>span{opacity:.55}
   .enlacePro{display:block;margin:14px auto 0;background:none;border:0;color:var(--marron);font-family:var(--versal);font-weight:700;font-size:1.15rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:8px}
   .masArchivo{display:block;width:100%;margin:4px 0 10px;padding:10px 12px;border:1.5px dashed var(--celda-borde);border-radius:10px;background:var(--celda);color:var(--tinta);font-family:var(--serif);font-size:.95rem;font-style:italic;cursor:pointer;line-height:1.4}
   .proBloq{font-weight:600;color:var(--marron);margin:0 0 6px}
