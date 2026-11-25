@@ -342,6 +342,17 @@
   .legalTxt h4{font-family:var(--versal);font-weight:700;font-size:1.2rem;color:var(--marron);margin:14px 0 4px}
   .legalTxt p{margin:0 0 6px;font-size:.98rem;line-height:1.5}
   .legalFin{text-align:center;font-style:italic;color:var(--gris);margin:16px 0 6px}
+  /* Ventana de confirmación (caché v19) */
+  .conf{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(30,45,55,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:confVelo .18s ease}
+  .conf.sale{opacity:0;transition:opacity .16s}
+  .confCaja{width:100%;max-width:400px;animation:confSube .24s cubic-bezier(.2,.9,.3,1.2)}
+  .confCaja h2{margin:2px 0 12px}
+  .confCaja p{margin:0 0 18px;font-size:1.08rem;line-height:1.55}
+  .confCaja .barra{margin-top:0;flex-direction:column-reverse;gap:10px}
+  .confCaja .barra .boton{min-width:0;width:100%;flex:none;padding:11px 12px}
+  @keyframes confVelo{from{opacity:0}}
+  @keyframes confSube{from{opacity:0;transform:translateY(14px) scale(.96)}}
+  @media (prefers-reduced-motion:reduce){.conf,.confCaja{animation:none}}
 </style>
 </head>
 <body>
@@ -401,7 +412,7 @@ es:{buscar:'Buscar carta…',partidaN:'Partida n.º {n}',contador:'Contador',toc
  verRes:'Ver resultado',resultado:'Resultado',empate:'Empate a puntos: decide la comida sin usar.',empateComp:' Siguen empatados, así que comparten la victoria.',
  filas:{aves:'Aves',bonus:'Bonus',rondas:'Rondas',huevos:'Huevos',comida:'Comida',bajo:'Bajo aves',nectar:'Néctar',colibri:'Colibríes',duelo:'Duelo',total:'Total',reserva:'Reserva'},
  volver:'Volver',terminar:'Terminar y guardar',guardada:'Guardada ✓',guardadaMsg:'Partida guardada en el archivo',
- confNueva:'¿Empezar una partida nueva? Se borra todo: puntos, jugadores y expansiones (el archivo se conserva).',
+ confNueva:'Se borran los puntos, los jugadores y las expansiones.', confSi:'Empezar de nuevo', confNo:'Cancelar',
  archVacio:'Todavía no hay partidas guardadas.',ver:'Ver',ocultar:'Ocultar',borrar:'Borrar',vaciar:'Vaciar archivo',otraVez:'Toca otra vez para confirmar',cerrar:'Cerrar',ganador:'Ganador',ganadores:'Ganadores',base:'Juego base',
  acceso:'Activa tu contador',clave:'Clave de licencia',activar:'Activar',comprar:'Comprar la clave',probar:'Probar gratis',quedan:'Te quedan {n} partidas de prueba',quedan1:'Te queda 1 partida de prueba',agotada:'Has usado las {n} partidas de prueba.',claveMal:'Clave incorrecta',activada:'¡Clave activada!',clavePie:'La clave te llega en el email de confirmación de compra.',
  tema:'Tema',auto:'Automático',dia:'Modo día',noche:'Modo noche',idioma:'Idioma',
@@ -426,7 +437,7 @@ ca:{buscar:'Cercar carta…',partidaN:'Partida núm. {n}',contador:'Comptador',t
  verRes:'Veure resultat',resultado:'Resultat',empate:'Empat a punts: decideix el menjar sense fer servir.',empateComp:' Continuen empatats, així que comparteixen la victòria.',
  filas:{aves:'Ocells',bonus:'Bonus',rondas:'Rondes',huevos:'Ous',comida:'Menjar',bajo:'Sota ocells',nectar:'Nèctar',colibri:'Colibrís',duelo:'Duel',total:'Total',reserva:'Reserva'},
  volver:'Tornar',terminar:'Acabar i desar',guardada:'Desada ✓',guardadaMsg:"Partida desada a l'arxiu",
- confNueva:"Començar una partida nova? S'esborra tot: punts, jugadors i expansions (l'arxiu es conserva).",
+ confNueva:"S'esborren els punts, els jugadors i les expansions.", confSi:'Tornar a començar', confNo:'Cancel·lar',
  archVacio:'Encara no hi ha partides desades.',ver:'Veure',ocultar:'Amagar',borrar:'Esborrar',vaciar:"Buidar l'arxiu",otraVez:'Toca un altre cop per confirmar',cerrar:'Tancar',ganador:'Guanyador',ganadores:'Guanyadors',base:'Joc base',
  acceso:'Activa el teu comptador',clave:'Clau de llicència',activar:'Activar',comprar:'Comprar la clau',probar:'Provar gratis',quedan:'Et queden {n} partides de prova',quedan1:"Et queda 1 partida de prova",agotada:'Has fet servir les {n} partides de prova.',claveMal:'Clau incorrecta',activada:'Clau activada!',clavePie:"La clau t'arriba al correu de confirmació de compra.",
  tema:'Tema',auto:'Automàtic',dia:'Mode dia',noche:'Mode nit',idioma:'Idioma',
@@ -451,7 +462,7 @@ en:{buscar:'Search card…',partidaN:'Game #{n}',contador:'Counter',toca:'Tap to
  verRes:'See result',resultado:'Result',empate:'Tied on points: unused food decides.',empateComp:' Still tied, so they share the victory.',
  filas:{aves:'Birds',bonus:'Bonus',rondas:'Rounds',huevos:'Eggs',comida:'Food',bajo:'Tucked',nectar:'Nectar',colibri:'Hummingbirds',duelo:'Duet',total:'Total',reserva:'Supply'},
  volver:'Back',terminar:'Finish and save',guardada:'Saved ✓',guardadaMsg:'Game saved to the archive',
- confNueva:'Start a new game? Everything is cleared: points, players and expansions (the archive is kept).',
+ confNueva:'Points, players and expansions will be cleared.', confSi:'Start over', confNo:'Cancel',
  archVacio:'No saved games yet.',ver:'Show',ocultar:'Hide',borrar:'Delete',vaciar:'Clear archive',otraVez:'Tap again to confirm',cerrar:'Close',ganador:'Winner',ganadores:'Winners',base:'Base game',
  acceso:'Unlock your counter',clave:'Licence key',activar:'Activate',comprar:'Buy the key',probar:'Try for free',quedan:'{n} trial games left',quedan1:'1 trial game left',agotada:'You have used your {n} trial games.',claveMal:'Wrong key',activada:'Key activated!',clavePie:'The key arrives in your purchase confirmation email.',
  tema:'Theme',auto:'Automatic',dia:'Day mode',noche:'Night mode',idioma:'Language',
@@ -476,7 +487,7 @@ fr:{buscar:'Chercher une carte…',partidaN:'Partie nº {n}',contador:'Compteur'
  verRes:'Voir le résultat',resultado:'Résultat',empate:'Égalité de points : la nourriture inutilisée départage.',empateComp:' Toujours à égalité : ils partagent la victoire.',
  filas:{aves:'Oiseaux',bonus:'Bonus',rondas:'Manches',huevos:'Œufs',comida:'Nourriture',bajo:'Glissées',nectar:'Nectar',colibri:'Colibris',duelo:'Duel',total:'Total',reserva:'Réserve'},
  volver:'Retour',terminar:'Terminer et enregistrer',guardada:'Enregistrée ✓',guardadaMsg:'Partie enregistrée dans les archives',
- confNueva:'Commencer une nouvelle partie ? Tout est effacé : points, joueurs et extensions (les archives sont conservées).',
+ confNueva:'Les points, les joueurs et les extensions seront effacés.', confSi:'Recommencer', confNo:'Annuler',
  archVacio:'Aucune partie enregistrée pour l’instant.',ver:'Voir',ocultar:'Masquer',borrar:'Supprimer',vaciar:'Vider les archives',otraVez:'Touchez encore pour confirmer',cerrar:'Fermer',ganador:'Gagnant',ganadores:'Gagnants',base:'Jeu de base',
  acceso:'Activez votre compteur',clave:'Clé de licence',activar:'Activer',comprar:'Acheter la clé',probar:'Essayer gratuitement',quedan:'Il vous reste {n} parties d’essai',quedan1:'Il vous reste 1 partie d’essai',agotada:'Vous avez utilisé vos {n} parties d’essai.',claveMal:'Clé incorrecte',activada:'Clé activée !',clavePie:'La clé arrive dans l’e-mail de confirmation d’achat.',
  tema:'Thème',auto:'Automatique',dia:'Mode jour',noche:'Mode nuit',idioma:'Langue',
@@ -501,7 +512,7 @@ de:{buscar:'Karte suchen…',partidaN:'Partie Nr. {n}',contador:'Zähler',toca:'
  verRes:'Ergebnis',resultado:'Ergebnis',empate:'Punktgleichstand: ungenutztes Futter entscheidet.',empateComp:' Immer noch gleich: sie teilen sich den Sieg.',
  filas:{aves:'Vögel',bonus:'Bonus',rondas:'Runden',huevos:'Eier',comida:'Futter',bajo:'Darunter',nectar:'Nektar',colibri:'Kolibris',duelo:'Duell',total:'Gesamt',reserva:'Vorrat'},
  volver:'Zurück',terminar:'Beenden und speichern',guardada:'Gespeichert ✓',guardadaMsg:'Spiel im Archiv gespeichert',
- confNueva:'Neues Spiel starten? Alles wird gelöscht: Punkte, Spieler und Erweiterungen (das Archiv bleibt).',
+ confNueva:'Punkte, Spieler und Erweiterungen werden gelöscht.', confSi:'Neu beginnen', confNo:'Abbrechen',
  archVacio:'Noch keine gespeicherten Spiele.',ver:'Zeigen',ocultar:'Ausblenden',borrar:'Löschen',vaciar:'Archiv leeren',otraVez:'Zum Bestätigen erneut tippen',cerrar:'Schließen',ganador:'Sieger',ganadores:'Sieger',base:'Grundspiel',
  acceso:'Zähler freischalten',clave:'Lizenzschlüssel',activar:'Aktivieren',comprar:'Schlüssel kaufen',probar:'Kostenlos testen',quedan:'Noch {n} Testspiele',quedan1:'Noch 1 Testspiel',agotada:'Du hast deine {n} Testspiele verbraucht.',claveMal:'Falscher Schlüssel',activada:'Schlüssel aktiviert!',clavePie:'Den Schlüssel bekommst du in der Kaufbestätigung per E-Mail.',
  tema:'Design',auto:'Automatisch',dia:'Tagmodus',noche:'Nachtmodus',idioma:'Sprache',
@@ -526,7 +537,7 @@ it:{buscar:'Cerca carta…',partidaN:'Partita n. {n}',contador:'Contatore',toca:
  verRes:'Vedi risultato',resultado:'Risultato',empate:'Pareggio a punti: decide il cibo non usato.',empateComp:' Ancora pari: condividono la vittoria.',
  filas:{aves:'Uccelli',bonus:'Bonus',rondas:'Round',huevos:'Uova',comida:'Cibo',bajo:'Sotto',nectar:'Nettare',colibri:'Colibrì',duelo:'Duello',total:'Totale',reserva:'Riserva'},
  volver:'Indietro',terminar:'Termina e salva',guardada:'Salvata ✓',guardadaMsg:'Partita salvata in archivio',
- confNueva:'Iniziare una nuova partita? Si cancella tutto: punti, giocatori ed espansioni (l’archivio resta).',
+ confNueva:'Si cancellano punti, giocatori ed espansioni.', confSi:'Ricomincia', confNo:'Annulla',
  archVacio:'Ancora nessuna partita salvata.',ver:'Mostra',ocultar:'Nascondi',borrar:'Elimina',vaciar:'Svuota archivio',otraVez:'Tocca di nuovo per confermare',cerrar:'Chiudi',ganador:'Vincitore',ganadores:'Vincitori',base:'Gioco base',
  acceso:'Attiva il tuo contatore',clave:'Chiave di licenza',activar:'Attiva',comprar:'Acquista la chiave',probar:'Prova gratis',quedan:'Ti restano {n} partite di prova',quedan1:'Ti resta 1 partita di prova',agotada:'Hai usato le tue {n} partite di prova.',claveMal:'Chiave errata',activada:'Chiave attivata!',clavePie:'La chiave arriva nell’e-mail di conferma dell’acquisto.',
  tema:'Tema',auto:'Automatico',dia:'Modalità giorno',noche:'Modalità notte',idioma:'Lingua',
@@ -903,6 +914,13 @@ function ponerN(n){ E.cfg.n=n; while(E.jug.length<n) E.jug.push(nuevoJugador());
 /* ============ HOJAS ============ */
 function abrirHoja(html){ $('#hoja').innerHTML=html; $('#velo').classList.remove('oculto'); $('#hoja').scrollTop=0; }
 function cerrarHoja(){ $('#velo').classList.add('oculto'); }
+// Ventana de confirmación propia (sustituye al confirm() del sistema)
+function confirmar(tit,txt,si,ok){
+  const v=document.createElement('div'); v.className='conf';
+  v.innerHTML=`<div class="panel confCaja" role="alertdialog" aria-modal="true"><h2><span class="trazo">${tit}</span></h2><p>${txt}</p><div class="barra"><button class="boton claro" data-conf="no">${t('confNo')}</button><button class="boton oro" data-conf="si">${si}</button></div></div>`;
+  v.addEventListener('click',e=>{ e.stopPropagation(); const b=e.target.closest('[data-conf]'); if(e.target!==v&&!b) return; v.classList.add('sale'); setTimeout(()=>v.remove(),160); if(b&&b.dataset.conf==='si') ok(); });
+  document.body.appendChild(v);
+}
 function avisar(txt){ const a=document.createElement('div'); a.className='aviso'; a.textContent=txt; document.body.appendChild(a); setTimeout(()=>a.remove(),2200); }
 
 function abrirResultado(conConfeti){
@@ -1022,8 +1040,8 @@ function empezar(){
   }
   guardar(); pantalla='juego'; pintar(); window.scrollTo(0,0);
 }
-function nuevaPartida(){
-  if(!confirm(t('confNueva'))) return;
+function nuevaPartida(){ confirmar(t('nueva'),t('confNueva'),t('confSi'),resetPartida); }
+function resetPartida(){
   E.cfg={n:2,exp:{eur:false,oce:false,asia:false,ame:false},lado:'verde',duelo:false};
   E.jug=[0,1].map(nuevoJugador);
   E.activo=0; E.empezada=false; E.guardada=false; guardar(); cerrarHoja();
